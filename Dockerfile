@@ -8,7 +8,7 @@ RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:17-jdk
 
-ARG JAR_FILE=stockapi.jar
+ARG JAR_FILE=payments.jar
 
 WORKDIR /opt/app
 

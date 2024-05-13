@@ -1,10 +1,23 @@
-import com.fiap.stock.domain.valueobjects.ProductCategory
-import com.fiap.stock.driver.web.request.ComponentRequest
-import com.fiap.stock.driver.web.request.ProductRequest
+import com.fiap.payments.domain.valueobjects.ProductCategory
+import com.fiap.payments.driver.web.request.ComponentRequest
+import com.fiap.payments.driver.web.request.CustomerRequest
+import com.fiap.payments.driver.web.request.ProductRequest
 import java.math.BigDecimal
 import java.util.*
 
-
+fun createCustomerRequest(
+    document: String = "444.555.666-77",
+    name: String = "Fulano de Tal",
+    email: String = "fulano@detal.com",
+    phone: String = "5511999999999",
+    address: String = "São Paulo",
+) = CustomerRequest(
+    document = document,
+    name = name,
+    email = email,
+    phone = phone,
+    address = address,
+)
 
 fun createProductRequest(
     name: String = "Big Mac",

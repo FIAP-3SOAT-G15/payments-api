@@ -2,7 +2,7 @@ module "secrets_manager" {
   source  = "terraform-aws-modules/secrets-manager/aws"
   version = "1.1.2"
 
-  name = "live/selfordermanagement/mercadopago"
+  name = "live/payments/mercadopago"
 
   ignore_secret_changes   = true
   recovery_window_in_days = 0

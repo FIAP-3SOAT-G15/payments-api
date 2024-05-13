@@ -1,22 +1,6 @@
 spring:
   application:
-    name: stock-api
-  datasource:
-    url: jdbc:postgresql://${DB_ENDPOINT}/${DB_NAME}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-  flyway:
-    baseline-on-migrate: true
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        enable_lazy_load_no_trans: true
-        jdbc:
-          lob:
-            non_contextual_creation: true
-        ddl-auto: validate
-        globally_quoted_identifiers: true
+    name: payments
   security:
     oauth2:
       resourceserver:
@@ -28,7 +12,7 @@ admin:
   access-token: ${ADMIN_ACCESS_TOKEN}
 
 payment-provider:
-  mock: true
+  mock: ${MOCK_PAYMENT_PROVIDER}
 
 mercadopago:
   api:
@@ -38,3 +22,12 @@ mercadopago:
   integration:
     posId: ${MP_POS_ID}
     webhookBaseUrl: ${MP_WEBHOOK_BASE_URL}
+
+amazon:
+  dynamodb:
+    endpoint: http://localhost:54000
+  aws:
+    accessKey: fakekey
+    secretKey: fakeaccesskey
+    region: us-east-2
+

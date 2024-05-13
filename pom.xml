@@ -5,13 +5,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.4</version>
+        <version>3.1.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.fiap</groupId>
-    <artifactId>stock-api</artifactId>
+    <artifactId>payments</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>stock-api</name>
+    <name>payments</name>
     <description>API</description>
     <properties>
         <java.version>17</java.version>
@@ -45,21 +45,6 @@
             <version>6.1.7.Final</version>
         </dependency>
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>2.2.224</version>
-        </dependency>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.5.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-            <version>9.22.3</version>
-        </dependency>
-        <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
@@ -78,6 +63,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>3.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -95,9 +81,14 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>test</scope>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-dynamodb</artifactId>
+            <version>1.12.719</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.boostchicken</groupId>
+            <artifactId>spring-data-dynamodb</artifactId>
+            <version>5.2.5</version>
         </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
@@ -129,7 +120,7 @@
         </dependencies>
     </dependencyManagement>
     <build>
-        <finalName>selfordermanagement</finalName>
+        <finalName>payments</finalName>
         <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
         <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
         <plugins>
@@ -291,7 +282,7 @@
                 <executions>
                     <execution>
                         <configuration>
-                            <mainClass>com.fiap.stock.StockApiApp</mainClass>
+                            <mainClass>com.fiap.payments.PaymentsApplication</mainClass>
                         </configuration>
                     </execution>
                     <execution>
