@@ -1,7 +1,8 @@
 package com.fiap.payments.domain.valueobjects
 
 import com.fiap.payments.domain.errors.ErrorType
-import com.fiap.payments.domain.errors.paymentsException
+import com.fiap.payments.domain.errors.PaymentsException
+
 
 enum class ProductCategory {
     DRINK,
@@ -13,7 +14,7 @@ enum class ProductCategory {
     companion object {
         fun fromString(category: String): ProductCategory {
             return ProductCategory.values().firstOrNull { it.name.equals(category.trim(), ignoreCase = true) }
-                ?: throw paymentsException(
+                ?: throw PaymentsException(
                     errorType = ErrorType.INVALID_PRODUCT_CATEGORY,
                     message = "Product category $category is not valid",
                 )

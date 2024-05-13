@@ -6,7 +6,7 @@ import com.fiap.payments.domain.entities.Order
 import com.fiap.payments.domain.entities.Payment
 import com.fiap.payments.domain.entities.PaymentRequest
 import com.fiap.payments.domain.errors.ErrorType
-import com.fiap.payments.domain.errors.paymentsException
+import com.fiap.payments.domain.errors.PaymentsException
 import com.fiap.payments.domain.valueobjects.PaymentStatus
 import com.fiap.payments.usecases.LoadPaymentUseCase
 import com.fiap.payments.usecases.ProvidePaymentRequestUseCase
@@ -20,7 +20,7 @@ class PaymentService(
         ProvidePaymentRequestUseCase {
     override fun getByOrderNumber(orderNumber: Long): Payment {
         return paymentRepository.findByOrderNumber(orderNumber)
-            ?: throw paymentsException(
+            ?: throw PaymentsException(
                 errorType = ErrorType.PAYMENT_NOT_FOUND,
                 message = "Payment not found for order [$orderNumber]",
             )

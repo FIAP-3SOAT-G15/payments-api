@@ -3,7 +3,7 @@ package com.fiap.payments.application.services
 import com.fiap.payments.adapter.gateway.PaymentGateway
 import com.fiap.payments.adapter.gateway.PaymentProviderGateway
 import com.fiap.payments.domain.errors.ErrorType
-import com.fiap.payments.domain.errors.paymentsException
+import com.fiap.payments.domain.errors.PaymentsException
 import createOrder
 import createPayment
 import createPaymentRequest
@@ -53,7 +53,7 @@ class PaymentServiceTest {
             every { paymentRepository.findByOrderNumber(orderNumber) } returns null
 
             assertThatThrownBy { paymentService.getByOrderNumber(orderNumber) }
-                .isInstanceOf(paymentsException::class.java)
+                .isInstanceOf(PaymentsException::class.java)
                 .hasFieldOrPropertyWithValue("errorType", ErrorType.PAYMENT_NOT_FOUND)
         }
     }

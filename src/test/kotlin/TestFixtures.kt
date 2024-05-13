@@ -1,11 +1,4 @@
-import com.fiap.payments.domain.entities.Component
-import com.fiap.payments.domain.entities.Customer
-import com.fiap.payments.domain.entities.Order
-import com.fiap.payments.domain.entities.OrderItem
-import com.fiap.payments.domain.entities.Payment
-import com.fiap.payments.domain.entities.PaymentRequest
-import com.fiap.payments.domain.entities.Product
-import com.fiap.payments.domain.entities.Stock
+import com.fiap.payments.domain.entities.*
 import com.fiap.payments.domain.valueobjects.OrderStatus
 import com.fiap.payments.domain.valueobjects.PaymentStatus
 import com.fiap.payments.domain.valueobjects.ProductCategory

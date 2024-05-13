@@ -1,7 +1,7 @@
 package com.fiap.payments.adapter.controller.configuration
 
 import com.fiap.payments.domain.errors.ErrorType
-import com.fiap.payments.domain.errors.paymentsException
+import com.fiap.payments.domain.errors.PaymentsException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 
 @ControllerAdvice
 class ControllerExceptionHandler {
-    @ExceptionHandler(paymentsException::class)
-    protected fun domainErrorHandler(domainException: paymentsException): ResponseEntity<ApiError> {
+    @ExceptionHandler(PaymentsException::class)
+    protected fun domainErrorHandler(domainException: PaymentsException): ResponseEntity<ApiError> {
         val apiErrorResponseEntity: ApiErrorResponseEntity =
             when (domainException.errorType) {
                 ErrorType.PRODUCT_ALREADY_EXISTS,
