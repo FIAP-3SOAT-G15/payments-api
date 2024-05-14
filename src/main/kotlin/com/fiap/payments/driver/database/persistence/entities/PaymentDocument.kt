@@ -15,28 +15,25 @@ import java.time.LocalDateTime
 class PaymentDocument(
     @field:DynamoDBHashKey
     @field:DynamoDBAttribute(attributeName = "payment_order_number")
-    val orderNumber: Long,
+    var orderNumber: String? = null ,
 
     @field:DynamoDBAttribute(attributeName = "payment_external_order_id")
-    val externalOrderId: String,
+    var externalOrderId: String = "",
 
-    @Column(name = "payment_external_order_global_id")
     @field:DynamoDBAttribute(attributeName = "payment_external_order_global_id")
-    val externalOrderGlobalId: String?,
+    var externalOrderGlobalId: String? = "",
 
     @field:DynamoDBAttribute(attributeName = "payment_payment_info")
-    val paymentInfo: String,
+    var paymentInfo: String = "",
 
     @field:DynamoDBAttribute(attributeName = "payment_created_at")
     @field:DynamoDBTypeConverted(converter = DynamoDBConfig.Companion.LocalDateTimeConverter::class)
-    @field:DynamoDBIndexRangeKey(globalSecondaryIndexName = "payment_order_number_payment_created_at")
-    val createdAt: LocalDateTime,
+    var createdAt: LocalDateTime? = null,
 
     @field:DynamoDBAttribute(attributeName = "payment_status")
-    @field:DynamoDBIndexRangeKey(globalSecondaryIndexName = "payment_order_number_payment_status")
-    val status: String,
+    var status: String = "",
 
     @field:DynamoDBAttribute(attributeName = "payment_status_changed_at")
     @field:DynamoDBTyped(DynamoDBMapperFieldModel.DynamoDBAttributeType.S)
-    val statusChangedAt: LocalDateTime,
+    var statusChangedAt: LocalDateTime? = null,
 )

@@ -9,4 +9,5 @@ interface PaymentMapper {
     fun toDomain(entity: PaymentDocument): Payment
 
     fun toEntity(domain: Payment): PaymentDocument
+
 }

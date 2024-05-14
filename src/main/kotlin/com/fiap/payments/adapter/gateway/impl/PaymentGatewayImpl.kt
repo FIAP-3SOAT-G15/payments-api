@@ -14,7 +14,7 @@ class PaymentGatewayImpl(
     private val mapper = Mappers.getMapper(PaymentMapper::class.java)
 
     override fun findByOrderNumber(orderNumber: Long): Payment? {
-        return paymentJpaRepository.findById(orderNumber)
+        return paymentJpaRepository.findById(orderNumber.toString())
             .map(mapper::toDomain)
             .orElse(null)
     }
