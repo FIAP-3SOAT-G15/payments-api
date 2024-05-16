@@ -1,0 +1,22 @@
+[
+  {
+    "IndexName": "payment_order_number_payment_created_at",
+    "KeySchema": [
+      {
+        "AttributeName": "payment_order_number",
+        "KeyType": "HASH"
+      },
+      {
+        "AttributeName": "payment_created_at",
+        "KeyType": "RANGE"
+      }
+    ],
+    "Projection": {
+      "ProjectionType": "ALL"
+    },
+    "ProvisionedThroughput": {
+      "ReadCapacityUnits": 10,
+      "WriteCapacityUnits": 10
+    }
+  }
+]

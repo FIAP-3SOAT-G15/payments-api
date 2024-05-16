@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: payments
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_ygM5FRn7D
+          jwk-set-uri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_ygM5FRn7D/.well-known/jwks.json
+
+admin:
+  access-token: ${ADMIN_ACCESS_TOKEN}
+
+payment-provider:
+  mock: ${MOCK_PAYMENT_PROVIDER}
+
+mercadopago:
+  api:
+    url: https://api.mercadopago.com
+    token: ${MP_TOKEN}
+    userId: ${MP_USER_ID}
+  integration:
+    posId: ${MP_POS_ID}
+    webhookBaseUrl: ${MP_WEBHOOK_BASE_URL}
+
+amazon:
+  dynamodb:
+    endpoint: http://localhost:54000
+  aws:
+    accessKey: fakekey
+    secretKey: fakeaccesskey
+    region: us-east-2
+

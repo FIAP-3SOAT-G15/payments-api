@@ -1,0 +1,4 @@
+spring:
+
+payment-provider:
+  mock: true
