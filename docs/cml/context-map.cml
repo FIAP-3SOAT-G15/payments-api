@@ -1,7 +1,0 @@
-/* Example Context Map written with 'ContextMapper DSL' */
-ContextMap SelfOrderSystemContextMap {
-	type = SYSTEM_LANDSCAPE
-	state = TO_BE
-	
-	/* TODO */
-}
