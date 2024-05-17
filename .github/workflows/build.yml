@@ -1,4 +1,4 @@
-name: App
+name: Build
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  app:
+  build:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -26,7 +26,18 @@ jobs:
           java-version: '17'
 
       - name: Verify
-        run: mvn verify -DskipITs=false
+        run: mvn -B verify -DskipITs=false org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=FIAP-3SOAT-G15_payments-api
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Upload Test Reports
+        uses: actions/upload-artifact@master
+        with:
+          name: generated-reports
+          path: |
+            target/site
+            target/surefire-reports.html
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
