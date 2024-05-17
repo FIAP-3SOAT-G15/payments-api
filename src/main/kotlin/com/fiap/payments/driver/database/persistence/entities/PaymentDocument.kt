@@ -34,6 +34,6 @@ class PaymentDocument(
     var status: String = "",
 
     @field:DynamoDBAttribute(attributeName = "payment_status_changed_at")
-    @field:DynamoDBTyped(DynamoDBMapperFieldModel.DynamoDBAttributeType.S)
+    @field:DynamoDBTypeConverted(converter = DynamoDBConfig.Companion.LocalDateTimeConverter::class)
     var statusChangedAt: LocalDateTime? = null,
 )

@@ -16,7 +16,7 @@ import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import services.PaymentService
+import com.fiap.payments.usecases.services.PaymentService
 
 class PaymentServiceTest {
     private val paymentRepository = mockk<PaymentGateway>()

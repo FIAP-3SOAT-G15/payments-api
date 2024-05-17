@@ -1,4 +1,4 @@
-package services
+package com.fiap.payments.usecases.services
 
 import com.fiap.payments.adapter.gateway.PaymentGateway
 import com.fiap.payments.adapter.gateway.PaymentProviderGateway

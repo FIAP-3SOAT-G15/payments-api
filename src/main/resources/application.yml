@@ -31,3 +31,9 @@ amazon:
     secretKey: fakeaccesskey
     region: us-east-2
 
+clients:
+  payments-api:
+    url: http://localhost:8080
+
+server:
+  port: 8082

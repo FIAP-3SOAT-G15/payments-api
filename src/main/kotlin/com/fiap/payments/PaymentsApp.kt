@@ -4,9 +4,12 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.info.Contact
 import io.swagger.v3.oas.annotations.info.Info
 import io.swagger.v3.oas.annotations.servers.Server
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 import org.springframework.boot.runApplication
+import org.springframework.cloud.openfeign.EnableFeignClients
+import org.springframework.cloud.openfeign.FeignAutoConfiguration
 
 @SpringBootApplication(exclude = [DataSourceAutoConfiguration::class])
 @OpenAPIDefinition(
@@ -27,6 +30,8 @@ import org.springframework.boot.runApplication
         Server(url = "/"),
     ],
 )
+@EnableFeignClients
+@ImportAutoConfiguration(value = [FeignAutoConfiguration::class])
 class PaymentsApp
 
 fun main(args: Array<String>) {
