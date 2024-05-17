@@ -2,12 +2,12 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.0.0"
+      version = ">= 5.21.0"
     }
   }
 
   backend "s3" {
-    bucket = "fiap-3soat-g15-infra-tech-challenge-state"
+    bucket = "fiap-3soat-g15-iac-payments-api"
     key    = "live/terraform.tfstate"
     region = "us-east-1"
   }

@@ -25,11 +25,11 @@ mercadopago:
 
 amazon:
   dynamodb:
-    endpoint: http://localhost:54000
+    endpoint: ${AWS_DYNAMODB_ENDPOINT}
   aws:
-    accessKey: fakekey
-    secretKey: fakeaccesskey
-    region: us-east-2
+    accessKey: ${AWS_ACCESS_KEY_ID}
+    secretKey: ${AWS_SECRET_ACCESS_KEY}
+    region: ${AWS_REGION}
 
 clients:
   payments-api:

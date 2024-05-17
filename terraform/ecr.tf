@@ -4,7 +4,7 @@ module "ecr" {
   source  = "terraform-aws-modules/ecr/aws"
   version = "1.6.0"
 
-  repository_name = "tech-challenge"
+  repository_name = "fiap-3soat-g15-payments-api"
 
   repository_read_write_access_arns = [data.aws_caller_identity.current.arn]
 
