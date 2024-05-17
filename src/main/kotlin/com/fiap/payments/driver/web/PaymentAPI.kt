@@ -1,6 +1,9 @@
 package com.fiap.payments.driver.web
 
+import com.fiap.payments.domain.entities.Order
 import com.fiap.payments.domain.entities.Payment
+import com.fiap.payments.domain.entities.PaymentRequest
+import com.fiap.payments.driver.web.request.OrderRequest
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.enums.ParameterIn
@@ -12,6 +15,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
@@ -64,4 +68,11 @@ interface PaymentAPI {
         @RequestParam(value = "id") resourceId: String,
         @RequestParam topic: String,
     ): ResponseEntity<Any>
+
+    @PostMapping("/create/{orderNumber}")
+    fun create(
+        @Parameter(description = "Número do pedido") @PathVariable orderNumber: Long,
+        @RequestBody order: OrderRequest
+    ): ResponseEntity<PaymentRequest>
+
 }

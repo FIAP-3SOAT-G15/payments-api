@@ -3,6 +3,7 @@ package com.fiap.payments.driver.database.configuration
 import com.fiap.payments.PaymentsApp
 import com.fiap.payments.adapter.gateway.*
 import com.fiap.payments.adapter.gateway.impl.*
+import com.fiap.payments.client.OrderApiClient
 import com.fiap.payments.driver.database.persistence.repository.*
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
@@ -20,5 +21,10 @@ class GatewayConfig {
     @Bean("TransactionalGateway")
     fun createTransactionalGateway(): TransactionalGateway {
         return TransactionalGatewayImpl()
+    }
+
+    @Bean("OrderGateway")
+    fun createOrderGateway(orderApiClient: OrderApiClient): OrderGateway {
+        return OrderGatewayImpl(orderApiClient)
     }
 }

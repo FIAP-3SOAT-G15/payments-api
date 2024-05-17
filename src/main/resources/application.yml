@@ -30,3 +30,10 @@ amazon:
     accessKey: ${AWS_ACCESS_KEY_ID}
     secretKey: ${AWS_SECRET_ACCESS_KEY}
     region: ${AWS_REGION}
+
+clients:
+  payments-api:
+    url: http://localhost:8080
+
+server:
+  port: 8082

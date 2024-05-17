@@ -1,8 +1,12 @@
 package com.fiap.payments.adapter.controller
 
+import com.fiap.payments.domain.entities.Order
 import com.fiap.payments.domain.entities.Payment
+import com.fiap.payments.domain.entities.PaymentRequest
 import com.fiap.payments.driver.web.PaymentAPI
+import com.fiap.payments.driver.web.request.OrderRequest
 import com.fiap.payments.usecases.LoadPaymentUseCase
+import com.fiap.payments.usecases.ProvidePaymentRequestUseCase
 import com.fiap.payments.usecases.SyncPaymentUseCase
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
@@ -11,7 +15,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class PaymentController(
     private val loadPaymentUseCase: LoadPaymentUseCase,
-    private val syncPaymentUseCase: SyncPaymentUseCase
+    private val syncPaymentUseCase: SyncPaymentUseCase,
+    private val providePaymentRequestUseCase: ProvidePaymentRequestUseCase
 ) : PaymentAPI {
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -52,6 +57,11 @@ class PaymentController(
         }
     }
 
+    override fun create(orderNumber: Long, order: OrderRequest): ResponseEntity<PaymentRequest> {
+        return ResponseEntity.ok(providePaymentRequestUseCase.providePaymentRequest(order.toDomain()));
+    }
+
+
     enum class IPNType(val ipnType: String) {
         MERCHANT_ORDER("merchant_order"),
         PAYMENT("payment"),
@@ -59,3 +69,5 @@ class PaymentController(
         POINT_INTEGRATION_IPN("point_integration_ipn"),
     }
 }
+
+

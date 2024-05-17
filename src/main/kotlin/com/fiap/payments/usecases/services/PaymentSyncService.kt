@@ -3,6 +3,7 @@ package com.fiap.payments.usecases.services
 import com.fiap.payments.adapter.gateway.PaymentGateway
 import com.fiap.payments.adapter.gateway.PaymentProviderGateway
 import com.fiap.payments.domain.valueobjects.PaymentStatus
+import com.fiap.payments.usecases.ConfirmOrderUseCase
 import com.fiap.payments.usecases.LoadPaymentUseCase
 import com.fiap.payments.usecases.SyncPaymentUseCase
 import java.time.LocalDateTime
@@ -11,6 +12,7 @@ class PaymentSyncService(
     private val loadPaymentUseCase: LoadPaymentUseCase,
     private val paymentGateway: PaymentGateway,
     private val paymentProviderGateway: PaymentProviderGateway,
+    private val confirmOrderUseCase: ConfirmOrderUseCase
 ): SyncPaymentUseCase {
 
     override fun syncPayment(orderNumber: Long, externalOrderGlobalId: String) {
@@ -29,6 +31,10 @@ class PaymentSyncService(
                     statusChangedAt = LocalDateTime.now(),
                 )
             )
+
+            if (newStatus == PaymentStatus.CONFIRMED) {
+                confirmOrderUseCase.confirmOrder(orderNumber)
+            }
 
         }
     }
