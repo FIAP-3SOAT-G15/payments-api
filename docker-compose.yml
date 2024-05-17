@@ -1,16 +1,16 @@
 version: '3.7'
 
 services:
-  api:
+  payments_api:
     image: fiap-3soat-g15-payments-api:latest
-    container_name: app
+    container_name: payments_api
     build:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      - db
+      - payments_db
     environment:
-      AWS_DYNAMODB_ENDPOINT: payment_db:54000
+      AWS_DYNAMODB_ENDPOINT: payments_db:54000
       AWS_ACCESS_KEY_ID: "fakekey"
       AWS_SECRET_ACCESS_KEY: "fakeaccesskey"
       AWS_REGION: us-east-1
@@ -24,8 +24,9 @@ services:
       - "8080:8080"
     restart: always
 
-  payment_db:
+  payments_db:
     image: amazon/dynamodb-local:latest
+    container_name: payments_db
     ports:
       - "54000:8000"
     environment:
@@ -35,5 +36,5 @@ services:
     command: ["-D\"java.library.path\"=./DynamoDBLocal_lib", "-jar", "DynamoDBLocal.jar", "-inMemory", "-sharedDb"]
 
 volumes:
-  db:
+  payments_db:
     driver: local
