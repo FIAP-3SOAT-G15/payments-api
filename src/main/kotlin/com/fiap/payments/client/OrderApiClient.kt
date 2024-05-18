@@ -5,7 +5,7 @@ import com.fiap.payments.domain.entities.Order
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.*
 
-@FeignClient(name = "orders-client", url = "\${clients.payments-api.url}")
+@FeignClient(name = "orders-client", url = "\${clients.orders-api.url}")
 interface OrderApiClient {
 
     @RequestMapping(
