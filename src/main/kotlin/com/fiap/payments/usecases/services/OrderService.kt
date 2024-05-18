@@ -6,15 +6,9 @@ import com.fiap.payments.usecases.ConfirmOrderUseCase
 
 open class OrderService(
     private val orderGateway: OrderGateway,
-) :
-    ConfirmOrderUseCase
- {
+): ConfirmOrderUseCase {
 
     override fun confirmOrder(orderNumber: Long): Order {
         return orderGateway.confirmOrder(orderNumber)
     }
-
-
-
-
 }

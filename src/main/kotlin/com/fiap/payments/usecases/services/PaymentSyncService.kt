@@ -35,7 +35,6 @@ class PaymentSyncService(
             if (newStatus == PaymentStatus.CONFIRMED) {
                 confirmOrderUseCase.confirmOrder(orderNumber)
             }
-
         }
     }
 }

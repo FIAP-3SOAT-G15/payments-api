@@ -32,8 +32,8 @@ amazon:
     region: ${AWS_REGION}
 
 clients:
-  payments-api:
-    url: http://localhost:8080
+  orders-api:
+    url: ${ORDERS_SERVICE_URL}
 
 server:
   port: 8082
