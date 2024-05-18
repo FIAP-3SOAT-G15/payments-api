@@ -10,9 +10,10 @@ services:
     depends_on:
       - payments_db
     environment:
-      AWS_DYNAMODB_ENDPOINT: payments_db:54000
+      SPRING_PROFILES_ACTIVE: local
       AWS_ACCESS_KEY_ID: "fakekey"
       AWS_SECRET_ACCESS_KEY: "fakeaccesskey"
+      AWS_DYNAMODB_ENDPOINT: payments_db:54000
       AWS_REGION: us-east-1
       ADMIN_ACCESS_TOKEN: token
       MOCK_PAYMENT_PROVIDER: true

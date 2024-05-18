@@ -23,14 +23,6 @@ mercadopago:
     posId: ${MP_POS_ID}
     webhookBaseUrl: ${MP_WEBHOOK_BASE_URL}
 
-amazon:
-  dynamodb:
-    endpoint: ${AWS_DYNAMODB_ENDPOINT}
-  aws:
-    accessKey: ${AWS_ACCESS_KEY_ID}
-    secretKey: ${AWS_SECRET_ACCESS_KEY}
-    region: ${AWS_REGION}
-
 clients:
   orders-api:
     url: ${ORDERS_SERVICE_URL}
