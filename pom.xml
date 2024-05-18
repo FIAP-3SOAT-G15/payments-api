@@ -305,7 +305,7 @@
                 <executions>
                     <execution>
                         <configuration>
-                            <mainClass>com.fiap.payments.PaymentsApplication</mainClass>
+                            <mainClass>com.fiap.payments.PaymentsApiApp</mainClass>
                         </configuration>
                     </execution>
                     <execution>

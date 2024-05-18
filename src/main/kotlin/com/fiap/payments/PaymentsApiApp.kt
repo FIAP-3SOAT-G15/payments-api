@@ -32,8 +32,8 @@ import org.springframework.cloud.openfeign.FeignAutoConfiguration
 )
 @EnableFeignClients
 @ImportAutoConfiguration(value = [FeignAutoConfiguration::class])
-class PaymentsApp
+class PaymentsApiApp
 
 fun main(args: Array<String>) {
-    runApplication<PaymentsApp>(*args)
+    runApplication<PaymentsApiApp>(*args)
 }

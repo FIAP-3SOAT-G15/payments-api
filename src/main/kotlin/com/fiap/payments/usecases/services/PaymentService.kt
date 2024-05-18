@@ -10,14 +10,17 @@ import com.fiap.payments.domain.errors.PaymentsException
 import com.fiap.payments.domain.valueobjects.PaymentStatus
 import com.fiap.payments.usecases.LoadPaymentUseCase
 import com.fiap.payments.usecases.ProvidePaymentRequestUseCase
+import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 
 class PaymentService(
     private val paymentRepository: PaymentGateway,
     private val paymentProvider: PaymentProviderGateway,
-) :
-    LoadPaymentUseCase,
-        ProvidePaymentRequestUseCase {
+) : LoadPaymentUseCase,
+    ProvidePaymentRequestUseCase
+{
+    private val log = LoggerFactory.getLogger(javaClass)
+    
     override fun getByOrderNumber(orderNumber: Long): Payment {
         return paymentRepository.findByOrderNumber(orderNumber)
             ?: throw PaymentsException(
@@ -36,6 +39,8 @@ class PaymentService(
 
     override fun providePaymentRequest(order: Order): PaymentRequest {
         val paymentRequest = paymentProvider.createExternalOrder(order)
+        log.info("Payment request created for order $order")
+
         val payment =
             Payment(
                 orderNumber = order.number!!,
@@ -48,6 +53,7 @@ class PaymentService(
             )
 
         paymentRepository.create(payment)
+        log.info("Payment stored for order $order")
 
         return paymentRequest
     }

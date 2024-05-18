@@ -1,6 +1,6 @@
 package com.fiap.payments.adapter.controller.configuration
 
-import com.fiap.payments.PaymentsApp
+import com.fiap.payments.PaymentsApiApp
 import com.fiap.payments.adapter.gateway.OrderGateway
 import com.fiap.payments.adapter.gateway.PaymentGateway
 import com.fiap.payments.adapter.gateway.PaymentProviderGateway
@@ -14,7 +14,7 @@ import com.fiap.payments.usecases.services.PaymentService
 import com.fiap.payments.usecases.services.OrderService
 
 @Configuration
-@ComponentScan(basePackageClasses = [PaymentsApp::class])
+@ComponentScan(basePackageClasses = [PaymentsApiApp::class])
 class ServiceConfig {
 
 

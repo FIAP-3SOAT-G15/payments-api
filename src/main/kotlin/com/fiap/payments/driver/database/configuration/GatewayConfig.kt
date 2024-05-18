@@ -1,6 +1,6 @@
 package com.fiap.payments.driver.database.configuration
 
-import com.fiap.payments.PaymentsApp
+import com.fiap.payments.PaymentsApiApp
 import com.fiap.payments.adapter.gateway.*
 import com.fiap.payments.adapter.gateway.impl.*
 import com.fiap.payments.client.OrderApiClient
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-@ComponentScan(basePackageClasses = [PaymentsApp::class])
+@ComponentScan(basePackageClasses = [PaymentsApiApp::class])
 class GatewayConfig {
 
     @Bean("PaymentGateway")
