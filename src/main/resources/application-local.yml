@@ -1,0 +1,5 @@
+aws:
+  dynamodb:
+    local: true
+    endpoint: ${AWS_DYNAMODB_ENDPOINT}
+    region: ${AWS_REGION}

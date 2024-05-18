@@ -1,8 +1,7 @@
 package com.fiap.payments.driver.database.configuration
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider
-import com.amazonaws.auth.BasicAWSCredentials
-import com.amazonaws.client.builder.AwsClientBuilder
+import com.amazonaws.auth.WebIdentityTokenCredentialsProvider
+import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
@@ -10,6 +9,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverter
 import org.socialsignin.spring.data.dynamodb.repository.config.EnableDynamoDBRepositories
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
@@ -19,12 +19,7 @@ import java.util.*
 
 @Configuration
 @EnableDynamoDBRepositories(basePackages = ["com.fiap.payments.driver.database.persistence.repository"])
-class DynamoDBConfig(
-    @Value("\${amazon.dynamodb.endpoint}") private val endpoint: String,
-    @Value("\${amazon.aws.accessKey}") private val accessKey: String,
-    @Value("\${amazon.aws.secretKey}") private val secretKey: String,
-    @Value("\${amazon.aws.region}") private val region: String
-) {
+class DynamoDBConfig {
 
     @Primary
     @Bean
@@ -32,19 +27,43 @@ class DynamoDBConfig(
         return DynamoDBMapper(amazonDynamoDB, DynamoDBMapperConfig.DEFAULT)
     }
 
-    @Bean
-    fun amazonDynamoDB(): AmazonDynamoDB {
-        val awsCredentials = BasicAWSCredentials(accessKey, secretKey)
-        val awsCredentialsProvider = AWSStaticCredentialsProvider(awsCredentials)
-        val endpointConfiguration = AwsClientBuilder.EndpointConfiguration(endpoint, region)
+    /**
+     * For local run.
+     */
+    @Bean("AmazonDynamoDB")
+    @ConditionalOnProperty("aws.dynamodb.local", havingValue = "true")
+    fun amazonDynamoDB(
+        @Value("\${aws.dynamodb.endpoint}") endpoint: String,
+        @Value("\${aws.dynamodb.region}") region: String,
+    ): AmazonDynamoDB {
         return AmazonDynamoDBClientBuilder.standard()
-            .withCredentials(awsCredentialsProvider)
-            .withEndpointConfiguration(endpointConfiguration)
+            // using default credentials provider chain, which searches for environment variables
+            // AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
+            // and therefore only endpoint override is needed
+            .withEndpointConfiguration(EndpointConfiguration(endpoint, region))
             .build()
     }
 
-    @Bean
-    fun awsCredentials() = BasicAWSCredentials(accessKey, secretKey)
+    /**
+     * For production run.
+     * 
+     * This is not necessary when using AWS SDK v2.
+     * However, since we are using this old library
+     * https://github.com/boostchicken/spring-data-dynamodb
+     * we need to keep as v1 and include token provider to the chain.
+     */
+    @Bean("AmazonDynamoDB")
+    @ConditionalOnProperty("aws.dynamodb.local", matchIfMissing = true)
+    fun awsCredentialsProvider(): AmazonDynamoDB {
+        return AmazonDynamoDBClientBuilder.standard()
+            // AWS_WEB_IDENTITY_TOKEN_FILE is present.
+            // This environment variable is included in AWS SDK v2, but not AWS SDK v1.
+            // Since project uses this old library
+            // https://github.com/boostchicken/spring-data-dynamodb
+            // it is needed to keep v1 and include token provider to the chain.
+            .withCredentials(WebIdentityTokenCredentialsProvider.builder().build())
+            .build()
+    }
 
     companion object {
         class LocalDateTimeConverter : DynamoDBTypeConverter<Date, LocalDateTime> {
