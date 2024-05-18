@@ -7,14 +7,12 @@ on:
     paths:
       - .github/workflows/provision.yml
       - 'terraform/**'
-      - 'src/**'
   pull_request:
     branches:
       - main
     paths:
       - .github/workflows/provision.yml
       - 'terraform/**'
-      - 'src/**'
   workflow_dispatch:
 
 jobs:

@@ -30,11 +30,11 @@ class DynamoDBConfig {
     /**
      * For local run.
      */
-    @Bean("AmazonDynamoDB")
+    @Bean("amazonDynamoDB")
     @ConditionalOnProperty("aws.dynamodb.local", havingValue = "true")
     fun amazonDynamoDB(
-        @Value("\${aws.dynamodb.endpoint}") endpoint: String,
-        @Value("\${aws.dynamodb.region}") region: String,
+        @Value("\${aws.dynamodb.endpoint:#{null}}") endpoint: String,
+        @Value("\${aws.dynamodb.region}:#{null}") region: String,
     ): AmazonDynamoDB {
         return AmazonDynamoDBClientBuilder.standard()
             // using default credentials provider chain, which searches for environment variables
@@ -52,8 +52,8 @@ class DynamoDBConfig {
      * https://github.com/boostchicken/spring-data-dynamodb
      * we need to keep as v1 and include token provider to the chain.
      */
-    @Bean("AmazonDynamoDB")
-    @ConditionalOnProperty("aws.dynamodb.local", matchIfMissing = true)
+    @Bean("amazonDynamoDB")
+    @ConditionalOnProperty("aws.dynamodb.local", havingValue = "false")
     fun awsCredentialsProvider(): AmazonDynamoDB {
         return AmazonDynamoDBClientBuilder.standard()
             // AWS_WEB_IDENTITY_TOKEN_FILE is present.

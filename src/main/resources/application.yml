@@ -23,6 +23,10 @@ mercadopago:
     posId: ${MP_POS_ID}
     webhookBaseUrl: ${MP_WEBHOOK_BASE_URL}
 
+aws:
+  dynamodb:
+    local: false
+
 clients:
   orders-api:
     url: ${ORDERS_SERVICE_URL}
