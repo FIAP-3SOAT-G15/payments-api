@@ -3,3 +3,6 @@ aws:
     local: true
     endpoint: ${AWS_DYNAMODB_ENDPOINT}
     region: ${AWS_REGION}
+
+payment-provider:
+  mock: true
