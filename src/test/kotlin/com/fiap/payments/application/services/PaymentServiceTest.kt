@@ -4,8 +4,10 @@ import com.fiap.payments.adapter.gateway.PaymentGateway
 import com.fiap.payments.adapter.gateway.PaymentProviderGateway
 import com.fiap.payments.domain.errors.ErrorType
 import com.fiap.payments.domain.errors.PaymentsException
-import createOrder
+import com.fiap.payments.usecases.ConfirmOrderUseCase
+import com.fiap.payments.usecases.services.PaymentService
 import createPayment
+import createPaymentHTTPRequest
 import createPaymentRequest
 import io.mockk.every
 import io.mockk.mockk
@@ -16,16 +18,17 @@ import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import com.fiap.payments.usecases.services.PaymentService
 
 class PaymentServiceTest {
     private val paymentRepository = mockk<PaymentGateway>()
     private val paymentProvider = mockk<PaymentProviderGateway>()
+    private val confirmOrderUseCase = mockk<ConfirmOrderUseCase>()
 
     private val paymentService =
         PaymentService(
             paymentRepository,
             paymentProvider,
+            confirmOrderUseCase
         )
 
     @AfterEach
@@ -36,23 +39,23 @@ class PaymentServiceTest {
     @Nested
     inner class GetByOrderNumberTest {
         @Test
-        fun `getByOrderNumberTest should return a Payment when it exists`() {
+        fun `should return a payment when it exists`() {
             val payment = createPayment()
 
-            every { paymentRepository.findByOrderNumber(payment.orderNumber) } returns payment
+            every { paymentRepository.findByPaymentId(payment.id) } returns payment
 
-            val result = paymentService.getByOrderNumber(payment.orderNumber)
+            val result = paymentService.getByPaymentId(payment.id)
 
             assertThat(result).isEqualTo(payment)
         }
 
         @Test
-        fun `getByOrderNumberTest should throw an exception when the payment is not found`() {
-            val orderNumber = 98765L
+        fun `should throw an exception when payment is not found`() {
+            val paymentId = "5019af79-11c8-4100-9d3c-e98563b1c52c"
 
-            every { paymentRepository.findByOrderNumber(orderNumber) } returns null
+            every { paymentRepository.findByPaymentId(paymentId) } returns null
 
-            assertThatThrownBy { paymentService.getByOrderNumber(orderNumber) }
+            assertThatThrownBy { paymentService.getByPaymentId(paymentId) }
                 .isInstanceOf(PaymentsException::class.java)
                 .hasFieldOrPropertyWithValue("errorType", ErrorType.PAYMENT_NOT_FOUND)
         }
@@ -61,21 +64,21 @@ class PaymentServiceTest {
     @Nested
     inner class ProvidePaymentRequestTest {
         @Test
-        fun `providePaymentRequest should create a new PaymentRequest and a corresponding Payment`() {
-            val order = createOrder()
-
+        fun `should create payment`() {
+            val paymentHTTPRequest = createPaymentHTTPRequest()
+            val payment = createPayment()
             val paymentRequest = createPaymentRequest()
 
-            every { paymentProvider.createExternalOrder(order) } returns paymentRequest
-            every { paymentRepository.create(any()) } answers { firstArg() }
+            every { paymentRepository.upsert(any()) } returns payment
+            every { paymentProvider.createExternalOrder(payment.id, paymentHTTPRequest) } returns paymentRequest
 
-            val result = paymentService.providePaymentRequest(order)
+            val result = paymentService.providePaymentRequest(paymentHTTPRequest)
 
             assertThat(result).isNotNull()
             assertThat(result.externalOrderId).isEqualTo(paymentRequest.externalOrderId)
             assertThat(result.paymentInfo).isEqualTo(paymentRequest.paymentInfo)
 
-            verify { paymentRepository.create(any()) }
+            verify { paymentRepository.upsert(any()) }
         }
     }
 }

@@ -1,30 +1,33 @@
 package com.fiap.payments.driver.database.persistence.entities
 
-import com.amazonaws.services.dynamodbv2.datamodeling.*
-import com.fiap.payments.domain.valueobjects.PaymentStatus
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted
 import com.fiap.payments.driver.database.configuration.DynamoDBConfig
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.Id
-import jakarta.persistence.Table
 import java.time.LocalDateTime
 
+/**
+ * Fields are nullable or receive blank String as default value,
+ * otherwise it fails when trying to construct the object
+ */
 @DynamoDBTable(tableName = "payments")
 class PaymentDocument(
     @field:DynamoDBHashKey
+    @field:DynamoDBAttribute(attributeName = "payment_id")
+    var id: String = "",
+
     @field:DynamoDBAttribute(attributeName = "payment_order_number")
-    var orderNumber: String? = null ,
+    var orderNumber: String = "",
 
     @field:DynamoDBAttribute(attributeName = "payment_external_order_id")
-    var externalOrderId: String = "",
+    var externalOrderId: String? = null,
 
     @field:DynamoDBAttribute(attributeName = "payment_external_order_global_id")
-    var externalOrderGlobalId: String? = "",
+    var externalOrderGlobalId: String? = null,
 
     @field:DynamoDBAttribute(attributeName = "payment_payment_info")
-    var paymentInfo: String = "",
+    var paymentInfo: String? = null,
 
     @field:DynamoDBAttribute(attributeName = "payment_created_at")
     @field:DynamoDBTypeConverted(converter = DynamoDBConfig.Companion.LocalDateTimeConverter::class)

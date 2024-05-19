@@ -2,53 +2,44 @@ package com.fiap.payments.adapter.gateway.impl
 
 import com.fiap.payments.adapter.gateway.PaymentGateway
 import com.fiap.payments.domain.entities.Payment
-import com.fiap.payments.domain.errors.ErrorType
-import com.fiap.payments.domain.errors.PaymentsException
-import com.fiap.payments.driver.database.persistence.repository.PaymentDynamoRepository
 import com.fiap.payments.driver.database.persistence.mapper.PaymentMapper
+import com.fiap.payments.driver.database.persistence.repository.PaymentDynamoRepository
 import org.mapstruct.factory.Mappers
 
 class PaymentGatewayImpl(
-    private val paymentJpaRepository: PaymentDynamoRepository,
+    private val paymentRepository: PaymentDynamoRepository,
 ) : PaymentGateway {
     private val mapper = Mappers.getMapper(PaymentMapper::class.java)
 
-    override fun findByOrderNumber(orderNumber: Long): Payment? {
-        return paymentJpaRepository.findById(orderNumber.toString())
+    override fun findByPaymentId(id: String): Payment? {
+        return paymentRepository.findById(id)
             .map(mapper::toDomain)
             .orElse(null)
     }
 
     override fun findAll(): List<Payment> {
-        return paymentJpaRepository.findAll()
+        return paymentRepository.findAll()
             .map(mapper::toDomain)
     }
 
-    override fun create(payment: Payment): Payment {
-        payment.orderNumber.let {
-            findByOrderNumber(it)?.let {
-                throw PaymentsException(
-                    errorType = ErrorType.PAYMENT_ALREADY_EXISTS,
-                    message = "Payment record for order [${payment.orderNumber}] already exists",
-                )
-            }
-        }
-        return persist(payment)
-    }
-
-    override fun update(payment: Payment): Payment {
-        val newItem =
-            payment.orderNumber.let { findByOrderNumber(it)?.update(payment) }
-                ?: throw PaymentsException(
-                    errorType = ErrorType.PAYMENT_NOT_FOUND,
-                    message = "Payment record for order [${payment.orderNumber}] not found",
-                )
-        return persist(newItem)
+    override fun upsert(payment: Payment): Payment {
+        val currentPayment = findByPaymentId(id = payment.id) ?: payment
+        val paymentUpdated =
+            currentPayment.copy(
+                orderNumber = payment.orderNumber,
+                externalOrderId = payment.externalOrderId,
+                externalOrderGlobalId = payment.externalOrderGlobalId,
+                paymentInfo = payment.paymentInfo,
+                createdAt = payment.createdAt,
+                status = payment.status,
+                statusChangedAt = payment.statusChangedAt,
+            )
+        return persist(paymentUpdated)
     }
 
     private fun persist(payment: Payment): Payment =
         payment
             .let(mapper::toEntity)
-            .let(paymentJpaRepository::save)
+            .let(paymentRepository::save)
             .let(mapper::toDomain)
 }

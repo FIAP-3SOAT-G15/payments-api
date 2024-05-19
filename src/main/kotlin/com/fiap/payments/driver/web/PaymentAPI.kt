@@ -1,8 +1,7 @@
 package com.fiap.payments.driver.web
 
 import com.fiap.payments.domain.entities.Payment
-import com.fiap.payments.domain.entities.PaymentRequest
-import com.fiap.payments.driver.web.request.OrderRequest
+import com.fiap.payments.driver.web.request.PaymentHTTPRequest
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.enums.ParameterIn
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
-@Tag(name = "pagamento", description = "API de pagamentos")
+@Tag(name = "pagamento", description = "Pagamentos")
 @RequestMapping("/payments")
 interface PaymentAPI {
     @Operation(summary = "Retorna todos os pagamentos")
@@ -37,9 +36,9 @@ interface PaymentAPI {
             ApiResponse(responseCode = "404", description = "Pedido não encontrado"),
         ],
     )
-    @GetMapping("/{orderNumber}")
-    fun getByOrderNumber(
-        @Parameter(description = "Número do pedido") @PathVariable orderNumber: Long,
+    @GetMapping("/{paymentId}")
+    fun getByPaymentId(
+        @Parameter(description = "ID de pagamento") @PathVariable paymentId: String,
     ): ResponseEntity<Payment>
 
     @Operation(
@@ -61,9 +60,9 @@ interface PaymentAPI {
             ApiResponse(responseCode = "200", description = "Operação bem-sucedida"),
         ],
     )
-    @PostMapping("/notifications/{orderNumber}")
+    @PostMapping("/notifications/{paymentId}")
     fun notify(
-        @Parameter(description = "Número do pedido") @PathVariable orderNumber: Long,
+        @Parameter(description = "ID de pagamento") @PathVariable paymentId: String,
         @RequestParam(value = "id") resourceId: String,
         @RequestParam topic: String,
     ): ResponseEntity<Any>
@@ -73,7 +72,36 @@ interface PaymentAPI {
             ApiResponse(responseCode = "200", description = "Operação bem-sucedida"),
         ],
     )
-    @PostMapping("/create")
-    fun create(@RequestBody order: OrderRequest): ResponseEntity<PaymentRequest>
+    @PostMapping
+    fun create(@RequestBody paymentHTTPRequest: PaymentHTTPRequest): ResponseEntity<Payment>
 
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Operação bem-sucedida"),
+        ],
+    )
+    @PostMapping("/{paymentId}/fail")
+    fun fail(
+        @Parameter(description = "ID de pagamento") @PathVariable paymentId: String,
+    ): ResponseEntity<Payment>
+
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Operação bem-sucedida"),
+        ],
+    )
+    @PostMapping("/{paymentId}/expire")
+    fun expire(
+        @Parameter(description = "ID de pagamento") @PathVariable paymentId: String,
+    ): ResponseEntity<Payment>
+
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Operação bem-sucedida"),
+        ],
+    )
+    @PostMapping("/{paymentId}/confirm")
+    fun confirm(
+        @Parameter(description = "ID de pagamento") @PathVariable paymentId: String,
+    ): ResponseEntity<Payment>
 }
