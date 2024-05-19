@@ -4,35 +4,35 @@ import com.fiap.payments.adapter.gateway.PaymentProviderGateway
 import com.fiap.payments.client.MercadoPagoClient
 import com.fiap.payments.client.MercadoPagoQRCodeOrderRequest
 import com.fiap.payments.client.MercadoPagoQRCodeOrderRequestItem
-import com.fiap.payments.domain.entities.Order
 import com.fiap.payments.domain.entities.PaymentRequest
 import com.fiap.payments.domain.valueobjects.PaymentStatus
+import com.fiap.payments.driver.web.request.PaymentHTTPRequest
 
 class MercadoPagoPaymentProvider(
     private val mercadoPagoClient: MercadoPagoClient,
     private val webhookBaseUrl: String,
 ) : PaymentProviderGateway {
     
-    override fun createExternalOrder(order: Order): PaymentRequest {
+    override fun createExternalOrder(paymentId: String, paymentHTTPRequest: PaymentHTTPRequest): PaymentRequest {
         // source_news=ipn indicates application will receive only Instant Payment Notifications (IPNs), not webhooks
-        val notificationUrl = "${webhookBaseUrl}/payments/notifications/${order.number}?source_news=ipn"
+        val notificationUrl = "${webhookBaseUrl}/payments/notifications/${paymentId}?source_news=ipn"
 
         val response =
             mercadoPagoClient.submitMerchantOrder(
                 MercadoPagoQRCodeOrderRequest(
-                    title = "Order ${order.number}",
-                    description = "Ordered at ${order.date} by ${ order.customer?.name ?: order.customer?.document ?: "anonymous" }",
-                    externalReference = order.number.toString(),
+                    title = "Order ${paymentHTTPRequest.orderInfo.number}",
+                    description = "Ordered at ${paymentHTTPRequest.orderInfo.orderedAt} " +
+                        "by ${ paymentHTTPRequest.orderInfo.orderedBy }",
+                    externalReference = paymentHTTPRequest.orderInfo.number.toString(),
                     notificationUrl = notificationUrl,
-                    totalAmount = order.total,
-                    items =
-                        order.items.map { product ->
+                    totalAmount = paymentHTTPRequest.orderInfo.totalAmount,
+                    items = paymentHTTPRequest.orderInfo.lines.map { orderLine ->
                             MercadoPagoQRCodeOrderRequestItem(
-                                title = product.name,
-                                unitPrice = product.price,
-                                quantity = 1, // TODO: fix to use order lines with persisted quantities per product
-                                unitMeasure = MercadoPagoMeasureUnit.UNIT.measureUnit,
-                                totalAmount = product.price,
+                                title = orderLine.name,
+                                unitPrice = orderLine.unitPrice,
+                                quantity = orderLine.quantity,
+                                unitMeasure = orderLine.unitOfMeasurement,
+                                totalAmount = orderLine.totalAmount,
                             )
                         },
                 ),
@@ -63,10 +63,6 @@ class MercadoPagoPaymentProvider(
                 PaymentStatus.FAILED
             }
         }
-    }
-
-    enum class MercadoPagoMeasureUnit(val measureUnit: String) {
-        UNIT("unit"),
     }
 
     /**

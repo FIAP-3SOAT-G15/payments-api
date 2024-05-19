@@ -1,8 +1,8 @@
 package com.fiap.payments.usecases
 
-import com.fiap.payments.domain.entities.Order
-import com.fiap.payments.domain.entities.PaymentRequest
+import com.fiap.payments.domain.entities.Payment
+import com.fiap.payments.driver.web.request.PaymentHTTPRequest
 
 interface ProvidePaymentRequestUseCase {
-    fun providePaymentRequest(order: Order): PaymentRequest
+    fun providePaymentRequest(paymentHTTPRequest: PaymentHTTPRequest): Payment
 }

@@ -15,11 +15,9 @@ import org.springframework.cloud.openfeign.FeignAutoConfiguration
 @OpenAPIDefinition(
     info =
         Info(
-            title = "Self-Order Management API",
+            title = "Payments API",
             version = "1.0.0",
-            description =
-                "API de autoatendimento em restaurante como implementação do Tech Challenge" +
-                    " referente à primeira fase do curso de pós-graduação em Arquitetura de Software pela FIAP.",
+            description = "Microsserviço de pagamentos",
             contact =
                 Contact(
                     name = "Grupo 15",

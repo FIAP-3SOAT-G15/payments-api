@@ -1,9 +1,9 @@
 package com.fiap.payments.adapter.controller
 
 import com.fiap.payments.domain.entities.Payment
-import com.fiap.payments.domain.entities.PaymentRequest
 import com.fiap.payments.driver.web.PaymentAPI
-import com.fiap.payments.driver.web.request.OrderRequest
+import com.fiap.payments.driver.web.request.PaymentHTTPRequest
+import com.fiap.payments.usecases.ChangePaymentStatusUseCase
 import com.fiap.payments.usecases.LoadPaymentUseCase
 import com.fiap.payments.usecases.ProvidePaymentRequestUseCase
 import com.fiap.payments.usecases.SyncPaymentUseCase
@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RestController
 class PaymentController(
     private val loadPaymentUseCase: LoadPaymentUseCase,
     private val syncPaymentUseCase: SyncPaymentUseCase,
-    private val providePaymentRequestUseCase: ProvidePaymentRequestUseCase
+    private val providePaymentRequestUseCase: ProvidePaymentRequestUseCase,
+    private val changePaymentStatusUseCase: ChangePaymentStatusUseCase,
 ) : PaymentAPI {
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -23,26 +24,26 @@ class PaymentController(
         return ResponseEntity.ok(loadPaymentUseCase.findAll())
     }
 
-    override fun getByOrderNumber(orderNumber: Long): ResponseEntity<Payment> {
-        return ResponseEntity.ok(loadPaymentUseCase.getByOrderNumber(orderNumber))
+    override fun getByPaymentId(id: String): ResponseEntity<Payment> {
+        return ResponseEntity.ok(loadPaymentUseCase.getByPaymentId(id))
     }
 
     /**
      * The server response is important to flag the provider for retries
      */
-    override fun notify(orderNumber: Long, resourceId: String, topic: String): ResponseEntity<Any> {
-        // TODO: verify x-signature header by Mercado Pago
-        log.info("Notification received for order ${orderNumber}: type=${topic} externalId=${resourceId}")
-        
+    override fun notify(paymentId: String, resourceId: String, topic: String): ResponseEntity<Any> {
+        // TODO: verify x-signature header allowing only request from Mercado Pago
+        log.info("Notification received for payment [${paymentId}]: type=${topic} externalId=${resourceId}")
+
         when (topic) {
             IPNType.MERCHANT_ORDER.ipnType -> {
-                syncPaymentUseCase.syncPayment(orderNumber, resourceId)
+                syncPaymentUseCase.syncPayment(paymentId, resourceId)
                 return ResponseEntity.ok().build()
             }
             IPNType.PAYMENT.ipnType -> {
-                val payment = loadPaymentUseCase.getByOrderNumber(orderNumber)
+                val payment = loadPaymentUseCase.getByPaymentId(paymentId)
                 payment.externalOrderGlobalId?.let {
-                    syncPaymentUseCase.syncPayment(orderNumber, it)
+                    syncPaymentUseCase.syncPayment(paymentId, it)
                     return ResponseEntity.ok().build()
                 }
                 // returns server error because external order global ID was not previously saved,
@@ -50,14 +51,26 @@ class PaymentController(
                 return ResponseEntity.internalServerError().build()
             }
             else -> {
-                // returns bad request because application does not accept this kind of IPN types
+                // returns bad request because application does not accept this IPN type
                 return ResponseEntity.badRequest().build()
             }
         }
     }
 
-    override fun create(order: OrderRequest): ResponseEntity<PaymentRequest> {
-        return ResponseEntity.ok(providePaymentRequestUseCase.providePaymentRequest(order.toDomain()));
+    override fun create(paymentHTTPRequest: PaymentHTTPRequest): ResponseEntity<Payment> {
+        return ResponseEntity.ok(providePaymentRequestUseCase.providePaymentRequest(paymentHTTPRequest))
+    }
+
+    override fun fail(paymentId: String): ResponseEntity<Payment> {
+        return ResponseEntity.ok(changePaymentStatusUseCase.failPayment(paymentId))
+    }
+
+    override fun expire(paymentId: String): ResponseEntity<Payment> {
+        return ResponseEntity.ok(changePaymentStatusUseCase.expirePayment(paymentId))
+    }
+
+    override fun confirm(paymentId: String): ResponseEntity<Payment> {
+        return ResponseEntity.ok(changePaymentStatusUseCase.confirmPayment(paymentId))
     }
 
     enum class IPNType(val ipnType: String) {

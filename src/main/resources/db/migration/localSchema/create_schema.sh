@@ -9,9 +9,9 @@ export AWS_REGION=us-east-1
 aws dynamodb create-table \
   --table-name payments \
   --attribute-definitions \
-      AttributeName=payment_order_number,AttributeType=S \
+      AttributeName=payment_id,AttributeType=S \
   --key-schema \
-      AttributeName=payment_order_number,KeyType=HASH \
+      AttributeName=payment_id,KeyType=HASH \
   --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
   --endpoint-url http://localhost:54000 \
   --region us-east-1 || true | cat

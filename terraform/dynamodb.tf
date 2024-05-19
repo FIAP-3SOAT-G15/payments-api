@@ -3,14 +3,14 @@ module "dynamodb_table" {
   version = "4.0.1"
 
   name        = "payments"
-  hash_key    = "payment_order_number"
+  hash_key    = "payment_id"
   table_class = "STANDARD"
 
   attributes = [
     {
-      name = "payment_order_number"
+      name = "payment_id"
       type = "S"
-    },
+    }
   ]
 
   tags = var.tags

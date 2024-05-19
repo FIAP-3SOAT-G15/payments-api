@@ -1,13 +1,13 @@
 [
   {
-    "IndexName": "payment_order_number_payment_created_at",
+    "IndexName": "payment_id_payment_order_number",
     "KeySchema": [
       {
-        "AttributeName": "payment_order_number",
+        "AttributeName": "payment_id",
         "KeyType": "HASH"
       },
       {
-        "AttributeName": "payment_created_at",
+        "AttributeName": "payment_order_number",
         "KeyType": "RANGE"
       }
     ],

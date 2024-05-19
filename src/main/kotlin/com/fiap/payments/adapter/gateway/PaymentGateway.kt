@@ -3,11 +3,9 @@ package com.fiap.payments.adapter.gateway
 import com.fiap.payments.domain.entities.Payment
 
 interface PaymentGateway {
-    fun findByOrderNumber(orderNumber: Long): Payment?
+    fun findByPaymentId(id: String): Payment?
 
     fun findAll(): List<Payment>
 
-    fun create(payment: Payment): Payment
-
-    fun update(payment: Payment): Payment
+    fun upsert(payment: Payment): Payment
 }

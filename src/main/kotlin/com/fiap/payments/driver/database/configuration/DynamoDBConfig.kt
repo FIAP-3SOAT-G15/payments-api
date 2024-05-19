@@ -33,8 +33,8 @@ class DynamoDBConfig {
     @Bean("amazonDynamoDB")
     @ConditionalOnProperty("aws.dynamodb.local", havingValue = "true")
     fun amazonDynamoDB(
-        @Value("\${aws.dynamodb.endpoint:#{null}}") endpoint: String,
-        @Value("\${aws.dynamodb.region}:#{null}") region: String,
+        @Value("\${aws.dynamodb.endpoint}") endpoint: String,
+        @Value("\${aws.dynamodb.region}") region: String,
     ): AmazonDynamoDB {
         return AmazonDynamoDBClientBuilder.standard()
             // using default credentials provider chain, which searches for environment variables
