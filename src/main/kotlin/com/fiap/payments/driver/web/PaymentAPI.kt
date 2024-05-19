@@ -1,6 +1,5 @@
 package com.fiap.payments.driver.web
 
-import com.fiap.payments.domain.entities.Order
 import com.fiap.payments.domain.entities.Payment
 import com.fiap.payments.domain.entities.PaymentRequest
 import com.fiap.payments.driver.web.request.OrderRequest
@@ -69,10 +68,12 @@ interface PaymentAPI {
         @RequestParam topic: String,
     ): ResponseEntity<Any>
 
-    @PostMapping("/create/{orderNumber}")
-    fun create(
-        @Parameter(description = "Número do pedido") @PathVariable orderNumber: Long,
-        @RequestBody order: OrderRequest
-    ): ResponseEntity<PaymentRequest>
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Operação bem-sucedida"),
+        ],
+    )
+    @PostMapping("/create")
+    fun create(@RequestBody order: OrderRequest): ResponseEntity<PaymentRequest>
 
 }

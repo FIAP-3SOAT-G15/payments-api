@@ -1,6 +1,6 @@
 package com.fiap.payments.driver.database.configuration
 
-import com.fiap.payments.PaymentsApp
+import com.fiap.payments.PaymentsApiApp
 import com.fiap.payments.adapter.gateway.PaymentProviderGateway
 import com.fiap.payments.client.MercadoPagoClient
 import com.fiap.payments.driver.database.provider.MercadoPagoPaymentProvider
@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-@ComponentScan(basePackageClasses = [PaymentsApp::class])
+@ComponentScan(basePackageClasses = [PaymentsApiApp::class])
 class PaymentGatewayConfig {
     @Bean("PaymentProvider")
     @ConditionalOnProperty("payment-provider.mock", havingValue = "false")

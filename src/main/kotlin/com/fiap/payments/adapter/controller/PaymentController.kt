@@ -1,6 +1,5 @@
 package com.fiap.payments.adapter.controller
 
-import com.fiap.payments.domain.entities.Order
 import com.fiap.payments.domain.entities.Payment
 import com.fiap.payments.domain.entities.PaymentRequest
 import com.fiap.payments.driver.web.PaymentAPI
@@ -57,10 +56,9 @@ class PaymentController(
         }
     }
 
-    override fun create(orderNumber: Long, order: OrderRequest): ResponseEntity<PaymentRequest> {
+    override fun create(order: OrderRequest): ResponseEntity<PaymentRequest> {
         return ResponseEntity.ok(providePaymentRequestUseCase.providePaymentRequest(order.toDomain()));
     }
-
 
     enum class IPNType(val ipnType: String) {
         MERCHANT_ORDER("merchant_order"),
@@ -69,5 +67,3 @@ class PaymentController(
         POINT_INTEGRATION_IPN("point_integration_ipn"),
     }
 }
-
-

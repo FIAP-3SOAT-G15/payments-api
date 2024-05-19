@@ -4,7 +4,6 @@ module "dynamodb_table" {
 
   name        = "payments"
   hash_key    = "payment_order_number"
-  range_key   = "payment_created_at"
   table_class = "STANDARD"
 
   attributes = [
@@ -12,11 +11,45 @@ module "dynamodb_table" {
       name = "payment_order_number"
       type = "S"
     },
-    {
-      name = "payment_created_at"
-      type = "S"
-    }
   ]
 
   tags = var.tags
+}
+
+resource "aws_iam_policy" "payments_dynamodb_table_policy" {
+  name = "TechChallengePaymentsDynamoDBTablePolicy"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        "Sid" : "ListAndDescribe",
+        "Effect" : "Allow",
+        "Action" : [
+          "dynamodb:List*",
+          "dynamodb:DescribeReservedCapacity*",
+          "dynamodb:DescribeLimits",
+          "dynamodb:DescribeTimeToLive"
+        ],
+        "Resource" : "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "dynamodb:BatchGet*",
+          "dynamodb:DescribeStream",
+          "dynamodb:DescribeTable",
+          "dynamodb:Get*",
+          "dynamodb:Query",
+          "dynamodb:Scan",
+          "dynamodb:BatchWrite*",
+          "dynamodb:CreateTable",
+          "dynamodb:Delete*",
+          "dynamodb:Update*",
+          "dynamodb:PutItem"
+        ],
+        Resource = module.dynamodb_table.dynamodb_table_arn
+      }
+    ]
+  })
 }
