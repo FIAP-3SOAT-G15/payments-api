@@ -24,8 +24,24 @@ class PaymentController(
         return ResponseEntity.ok(loadPaymentUseCase.findAll())
     }
 
-    override fun getByPaymentId(id: String): ResponseEntity<Payment> {
-        return ResponseEntity.ok(loadPaymentUseCase.getByPaymentId(id))
+    override fun getByPaymentId(paymentId: String): ResponseEntity<Payment> {
+        return ResponseEntity.ok(loadPaymentUseCase.getByPaymentId(paymentId))
+    }
+
+    override fun create(paymentHTTPRequest: PaymentHTTPRequest): ResponseEntity<Payment> {
+        return ResponseEntity.ok(providePaymentRequestUseCase.providePaymentRequest(paymentHTTPRequest))
+    }
+
+    override fun fail(paymentId: String): ResponseEntity<Payment> {
+        return ResponseEntity.ok(changePaymentStatusUseCase.failPayment(paymentId))
+    }
+
+    override fun expire(paymentId: String): ResponseEntity<Payment> {
+        return ResponseEntity.ok(changePaymentStatusUseCase.expirePayment(paymentId))
+    }
+
+    override fun confirm(paymentId: String): ResponseEntity<Payment> {
+        return ResponseEntity.ok(changePaymentStatusUseCase.confirmPayment(paymentId))
     }
 
     /**
@@ -55,22 +71,6 @@ class PaymentController(
                 return ResponseEntity.badRequest().build()
             }
         }
-    }
-
-    override fun create(paymentHTTPRequest: PaymentHTTPRequest): ResponseEntity<Payment> {
-        return ResponseEntity.ok(providePaymentRequestUseCase.providePaymentRequest(paymentHTTPRequest))
-    }
-
-    override fun fail(paymentId: String): ResponseEntity<Payment> {
-        return ResponseEntity.ok(changePaymentStatusUseCase.failPayment(paymentId))
-    }
-
-    override fun expire(paymentId: String): ResponseEntity<Payment> {
-        return ResponseEntity.ok(changePaymentStatusUseCase.expirePayment(paymentId))
-    }
-
-    override fun confirm(paymentId: String): ResponseEntity<Payment> {
-        return ResponseEntity.ok(changePaymentStatusUseCase.confirmPayment(paymentId))
     }
 
     enum class IPNType(val ipnType: String) {

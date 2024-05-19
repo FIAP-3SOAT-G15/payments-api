@@ -12,7 +12,7 @@ class MercadoPagoPaymentProvider(
     private val mercadoPagoClient: MercadoPagoClient,
     private val webhookBaseUrl: String,
 ) : PaymentProviderGateway {
-    
+
     override fun createExternalOrder(paymentId: String, paymentHTTPRequest: PaymentHTTPRequest): PaymentRequest {
         // source_news=ipn indicates application will receive only Instant Payment Notifications (IPNs), not webhooks
         val notificationUrl = "${webhookBaseUrl}/payments/notifications/${paymentId}?source_news=ipn"

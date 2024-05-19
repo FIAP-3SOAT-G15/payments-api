@@ -24,21 +24,18 @@ class PaymentService(
 {
     private val log = LoggerFactory.getLogger(javaClass)
 
-    override fun getByPaymentId(id: String): Payment {
-        return paymentGateway.findByPaymentId(id)
+    override fun getByPaymentId(paymentId: String): Payment =
+        paymentGateway.findByPaymentId(paymentId)
             ?: throw PaymentsException(
                 errorType = ErrorType.PAYMENT_NOT_FOUND,
-                message = "Payment [$id] not found",
+                message = "Payment [$paymentId] not found",
             )
-    }
 
-    override fun findByPaymentId(id: String): Payment? {
-        return paymentGateway.findByPaymentId(id)
-    }
+    override fun findByPaymentId(paymentId: String): Payment? = 
+        paymentGateway.findByPaymentId(paymentId)
 
-    override fun findAll(): List<Payment> {
-        return paymentGateway.findAll()
-    }
+    override fun findAll(): List<Payment> =
+        paymentGateway.findAll()
 
     override fun providePaymentRequest(paymentHTTPRequest: PaymentHTTPRequest): Payment {
         var payment = Payment(
@@ -64,52 +61,30 @@ class PaymentService(
     }
 
     override fun confirmPayment(paymentId: String): Payment {
-        return getByPaymentId(paymentId)
-            .takeIf { it.status == PaymentStatus.PENDING }
-            ?.let { payment ->
-                log.info("Confirming payment $payment")
-                val confirmedPayment = paymentGateway.upsert(payment.copy(
-                    status = PaymentStatus.CONFIRMED,
-                    statusChangedAt = LocalDateTime.now()
-                ))
-                confirmOrderUseCase.confirmOrder(confirmedPayment.orderNumber)
-                confirmedPayment
-            }
-            ?: throw PaymentsException(
-                errorType = ErrorType.INVALID_PAYMENT_STATE_TRANSITION,
-                message = "Payment can only be confirmed when it is pending",
-            )
+        val confirmedPayment = changePaymentStatus(paymentId = paymentId, newStatus = PaymentStatus.FAILED)
+        confirmOrderUseCase.confirmOrder(confirmedPayment.orderNumber)
+        return confirmedPayment
     }
 
-    override fun failPayment(paymentId: String): Payment {
-        return getByPaymentId(paymentId)
-            .takeIf { it.status == PaymentStatus.PENDING }
-            ?.let { payment ->
-                log.info("Failing payment $payment")
-                paymentGateway.upsert(payment.copy(
-                    status = PaymentStatus.FAILED,
-                    statusChangedAt = LocalDateTime.now()
-                ))
-            }
-            ?: throw PaymentsException(
-                errorType = ErrorType.INVALID_PAYMENT_STATE_TRANSITION,
-                message = "Payment can only be failed when it is pending",
-            )
-    }
+    override fun failPayment(paymentId: String): Payment =
+        changePaymentStatus(paymentId = paymentId, newStatus = PaymentStatus.FAILED)
 
-    override fun expirePayment(paymentId: String): Payment {
-        return getByPaymentId(paymentId)
+    override fun expirePayment(paymentId: String): Payment =
+        changePaymentStatus(paymentId = paymentId, newStatus = PaymentStatus.EXPIRED)
+
+    private fun changePaymentStatus(paymentId: String, newStatus: PaymentStatus): Payment =
+        getByPaymentId(paymentId)
             .takeIf { it.status == PaymentStatus.PENDING }
             ?.let { payment ->
-                log.info("Expiring payment $payment")
-                paymentGateway.upsert(payment.copy(
-                    status = PaymentStatus.EXPIRED,
+                log.info("Changing status of payment $payment to $newStatus")
+                val changedPayment = paymentGateway.upsert(payment.copy(
+                    status = newStatus,
                     statusChangedAt = LocalDateTime.now()
                 ))
+                changedPayment
             }
             ?: throw PaymentsException(
                 errorType = ErrorType.INVALID_PAYMENT_STATE_TRANSITION,
-                message = "Payment can only be expired when it is pending",
+                message = "Cannot change status of non-pending payment",
             )
-    }
 }
