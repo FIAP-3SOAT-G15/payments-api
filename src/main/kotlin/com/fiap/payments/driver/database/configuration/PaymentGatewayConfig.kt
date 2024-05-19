@@ -14,16 +14,14 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 @ComponentScan(basePackageClasses = [PaymentsApiApp::class])
 class PaymentGatewayConfig {
+
     @Bean("PaymentProvider")
     @ConditionalOnProperty("payment-provider.mock", havingValue = "false")
     fun createPaymentProvider(
         mercadoPagoClient: MercadoPagoClient,
         @Value("\${mercadopago.integration.webhookBaseUrl}") webhookBaseUrl: String,
     ): PaymentProviderGateway {
-        return MercadoPagoPaymentProvider(
-            mercadoPagoClient,
-            webhookBaseUrl,
-        )
+        return MercadoPagoPaymentProvider(mercadoPagoClient, webhookBaseUrl)
     }
     
     @Bean("PaymentProvider")
