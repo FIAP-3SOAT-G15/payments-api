@@ -30,13 +30,12 @@ fun createOrderInfo(
     number = number,
     orderedAt = orderedAt,
     orderedBy = orderedBy,
-    totalAmount = totalAmount,
+    total = totalAmount,
     lines = listOf(
         OrderLine(
             name = "Item 1",
             quantity = 1,
-            totalAmount = BigDecimal.valueOf(10),
-            unitOfMeasurement = "unit",
+            total = BigDecimal.valueOf(10),
             unitPrice = BigDecimal.valueOf(10),
         )
     )
