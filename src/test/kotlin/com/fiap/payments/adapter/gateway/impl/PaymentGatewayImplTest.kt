@@ -41,7 +41,7 @@ class PaymentGatewayImplTest {
         
         assertThat(result).containsExactlyInAnyOrderElementsOf(paymentEntities)
     }
-    
+
     @Test
     fun `should return existent payment`() {
         val paymentId = UUID.randomUUID().toString()
@@ -67,7 +67,7 @@ class PaymentGatewayImplTest {
     }
 
     @Nested
-    inner class Upsert {
+    inner class UpsertPayment {
 
         @Test
         fun `should insert new payment`() {
@@ -85,7 +85,7 @@ class PaymentGatewayImplTest {
 
         @Test
         fun `should update payment`() {
-            val oldPayment = createPayment(status = PaymentStatus.PENDING)
+            val oldPayment = createPayment(id = UUID.randomUUID().toString(), status = PaymentStatus.PENDING)
             val newPayment = oldPayment.copy(status = PaymentStatus.CONFIRMED)
             val oldPaymentDocument = oldPayment.toDocument()
             val newPaymentDocument = newPayment.toDocument()

@@ -25,14 +25,14 @@ class MercadoPagoPaymentProvider(
                         "by ${ paymentHTTPRequest.orderInfo.orderedBy }",
                     externalReference = paymentHTTPRequest.orderInfo.number.toString(),
                     notificationUrl = notificationUrl,
-                    totalAmount = paymentHTTPRequest.orderInfo.totalAmount,
+                    totalAmount = paymentHTTPRequest.orderInfo.total,
                     items = paymentHTTPRequest.orderInfo.lines.map { orderLine ->
                             MercadoPagoQRCodeOrderRequestItem(
                                 title = orderLine.name,
                                 unitPrice = orderLine.unitPrice,
                                 quantity = orderLine.quantity,
-                                unitMeasure = orderLine.unitOfMeasurement,
-                                totalAmount = orderLine.totalAmount,
+                                unitMeasure = DEFAULT_UNIT_OF_MEASUREMENT,
+                                totalAmount = orderLine.total,
                             )
                         },
                 ),
@@ -73,5 +73,9 @@ class MercadoPagoPaymentProvider(
         EXPIRED("expired"),
         PAYMENT_IN_PROCESS("payment_in_process"),
         PAYMENT_REQUIRED("payment_required"),
+    }
+    
+    companion object {
+        const val DEFAULT_UNIT_OF_MEASUREMENT = "UNIT"
     }
 }
