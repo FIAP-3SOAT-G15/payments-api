@@ -1,4 +1,4 @@
-package com.fiap.payments.driver.database.configuration
+package com.fiap.payments.driver.database.config
 
 import com.fiap.payments.PaymentsApiApp
 import com.fiap.payments.adapter.gateway.*

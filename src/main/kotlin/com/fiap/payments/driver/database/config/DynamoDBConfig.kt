@@ -1,4 +1,4 @@
-package com.fiap.payments.driver.database.configuration
+package com.fiap.payments.driver.database.config
 
 import com.amazonaws.auth.WebIdentityTokenCredentialsProvider
 import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration

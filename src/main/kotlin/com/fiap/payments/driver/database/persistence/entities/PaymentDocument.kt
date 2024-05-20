@@ -4,7 +4,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted
-import com.fiap.payments.driver.database.configuration.DynamoDBConfig
+import com.fiap.payments.driver.database.config.DynamoDBConfig
 import java.time.LocalDateTime
 
 /**

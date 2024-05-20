@@ -1,4 +1,4 @@
-package com.fiap.payments.adapter.controller.configuration
+package com.fiap.payments.adapter.controller.config
 
 import com.fiap.payments.PaymentsApiApp
 import com.fiap.payments.adapter.gateway.OrderGateway

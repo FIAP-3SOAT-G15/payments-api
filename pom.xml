@@ -31,6 +31,9 @@
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <sonar.language>kotlin</sonar.language>
         <sonar.verbose>true</sonar.verbose>
+        <sonar.exclusion>
+            **/com/fiap/order/driver/web/PaymentAPI*
+        </sonar.exclusion>
         
         <aws.java.sdk.version>1.12.724</aws.java.sdk.version>
     </properties>
@@ -383,8 +386,9 @@
                 <version>0.8.12</version>
                 <configuration>
                     <excludes>
-                        <exclude>**/*Config.*</exclude>
-                        <exclude>**/*Mapper.*</exclude>
+                        <exclude>**/com/fiap/payments/driver/database/persistence/entities/**</exclude>
+                        <exclude>**/com/fiap/payments/**/config/**</exclude>
+                        <exclude>**/com/fiap/payments/driver/web/PaymentAPI*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
