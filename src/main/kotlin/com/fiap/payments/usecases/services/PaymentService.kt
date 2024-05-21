@@ -61,7 +61,7 @@ class PaymentService(
     }
 
     override fun confirmPayment(paymentId: String): Payment {
-        val confirmedPayment = changePaymentStatus(paymentId = paymentId, newStatus = PaymentStatus.FAILED)
+        val confirmedPayment = changePaymentStatus(paymentId = paymentId, newStatus = PaymentStatus.CONFIRMED)
         confirmOrderUseCase.confirmOrder(confirmedPayment.orderNumber)
         return confirmedPayment
     }
