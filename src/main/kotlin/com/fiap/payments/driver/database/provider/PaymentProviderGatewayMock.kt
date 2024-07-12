@@ -4,7 +4,6 @@ import com.fiap.payments.adapter.gateway.PaymentProviderGateway
 import com.fiap.payments.domain.entities.PaymentRequest
 import com.fiap.payments.domain.valueobjects.PaymentStatus
 import com.fiap.payments.driver.messaging.event.PaymentRequestEvent
-import com.fiap.payments.driver.web.request.PaymentHTTPRequest
 import org.slf4j.LoggerFactory
 import java.util.*
 

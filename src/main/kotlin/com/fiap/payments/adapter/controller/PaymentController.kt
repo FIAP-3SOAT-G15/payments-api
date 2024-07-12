@@ -2,10 +2,8 @@ package com.fiap.payments.adapter.controller
 
 import com.fiap.payments.domain.entities.Payment
 import com.fiap.payments.driver.web.PaymentAPI
-import com.fiap.payments.driver.web.request.PaymentHTTPRequest
 import com.fiap.payments.usecases.ChangePaymentStatusUseCase
 import com.fiap.payments.usecases.LoadPaymentUseCase
-import com.fiap.payments.usecases.ProvidePaymentRequestUseCase
 import com.fiap.payments.usecases.SyncPaymentUseCase
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController
 class PaymentController(
     private val loadPaymentUseCase: LoadPaymentUseCase,
     private val syncPaymentUseCase: SyncPaymentUseCase,
-    private val providePaymentRequestUseCase: ProvidePaymentRequestUseCase,
     private val changePaymentStatusUseCase: ChangePaymentStatusUseCase,
 ) : PaymentAPI {
     private val log = LoggerFactory.getLogger(javaClass)

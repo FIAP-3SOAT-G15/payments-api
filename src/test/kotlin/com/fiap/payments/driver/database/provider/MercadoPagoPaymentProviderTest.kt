@@ -3,7 +3,7 @@ package com.fiap.payments.driver.database.provider
 import com.fiap.payments.client.MercadoPagoClient
 import com.fiap.payments.createMercadoPagoMerchantOrderResponse
 import com.fiap.payments.createMercadoPagoQRCodeOrderResponse
-import com.fiap.payments.createPaymentHTTPRequest
+import com.fiap.payments.createPaymentEvent
 import com.fiap.payments.domain.valueobjects.PaymentStatus
 import com.fiap.payments.driver.database.provider.MercadoPagoPaymentProvider.MercadoPagoOrderStatus
 import io.mockk.every
@@ -35,7 +35,7 @@ class MercadoPagoPaymentProviderTest {
     @Test
     fun `should create external order`() {
         val paymentId = UUID.randomUUID().toString()
-        val paymentHTTPRequest = createPaymentHTTPRequest()
+        val paymentHTTPRequest = createPaymentEvent()
         val mercadoPagoQRCodeOrderResponse = createMercadoPagoQRCodeOrderResponse()
         
         every { mercadoPagoClient.submitMerchantOrder(any()) } returns mercadoPagoQRCodeOrderResponse

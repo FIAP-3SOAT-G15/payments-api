@@ -2,7 +2,7 @@ package com.fiap.payments.adapter.controller
 
 import com.fiap.payments.adapter.controller.PaymentController.IPNType
 import com.fiap.payments.createPayment
-import com.fiap.payments.createPaymentHTTPRequest
+import com.fiap.payments.createPaymentEvent
 import com.fiap.payments.domain.valueobjects.PaymentStatus
 import com.fiap.payments.usecases.ChangePaymentStatusUseCase
 import com.fiap.payments.usecases.LoadPaymentUseCase
@@ -25,14 +25,12 @@ import java.util.*
 class PaymentControllerTest {
     private val loadPaymentUseCase = mockk<LoadPaymentUseCase>()
     private val syncPaymentUseCase = mockk<SyncPaymentUseCase>()
-    private val providePaymentRequestUseCase = mockk<ProvidePaymentRequestUseCase>()
     private val changePaymentStatusUseCase = mockk<ChangePaymentStatusUseCase>()
 
     private val paymentController =
         PaymentController(
             loadPaymentUseCase,
             syncPaymentUseCase,
-            providePaymentRequestUseCase,
             changePaymentStatusUseCase
         )
 

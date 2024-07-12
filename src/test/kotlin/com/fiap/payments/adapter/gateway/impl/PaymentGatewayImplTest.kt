@@ -7,10 +7,7 @@ import com.fiap.payments.domain.valueobjects.PaymentStatus
 import com.fiap.payments.driver.database.persistence.repository.PaymentDynamoRepository
 import com.fiap.payments.toDocument
 import com.fiap.payments.toPaymentEntity
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.unmockkAll
-import io.mockk.verify
+import io.mockk.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Nested
@@ -101,5 +98,21 @@ class PaymentGatewayImplTest {
             assertThat(result).isEqualTo(newPayment)
             verify(exactly = 1) { paymentRepository.save(any()) }
         }
+    }
+
+    @Nested
+    inner class PublishPayment {
+
+        @Test
+        fun `should send payment`() {
+            val payment = createPayment()
+
+            justRun { paymentSender.sendPayment(payment) }
+
+            val paymentSent = paymentGatewayImpl.publishPayment(payment)
+
+            assertThat(paymentSent.id).isEqualTo(payment.id)
+        }
+
     }
 }

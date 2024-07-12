@@ -10,13 +10,11 @@ import com.fiap.payments.domain.valueobjects.PaymentStatus
 import com.fiap.payments.driver.database.persistence.entities.PaymentDocument
 import com.fiap.payments.driver.database.provider.MercadoPagoPaymentProvider
 import com.fiap.payments.driver.messaging.event.PaymentRequestEvent
-import com.fiap.payments.driver.web.request.OrderInfo
-import com.fiap.payments.driver.web.request.OrderLine
-import com.fiap.payments.driver.web.request.PaymentHTTPRequest
+
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-fun createPaymentHTTPRequest(
+fun createPaymentEvent(
     orderInfo: com.fiap.payments.driver.messaging.event.OrderInfo = createOrderInfo()
 ) = PaymentRequestEvent(
     orderInfo = orderInfo

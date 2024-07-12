@@ -7,7 +7,6 @@ import com.fiap.payments.client.MercadoPagoQRCodeOrderRequestItem
 import com.fiap.payments.domain.entities.PaymentRequest
 import com.fiap.payments.domain.valueobjects.PaymentStatus
 import com.fiap.payments.driver.messaging.event.PaymentRequestEvent
-import com.fiap.payments.driver.web.request.PaymentHTTPRequest
 
 class MercadoPagoPaymentProvider(
     private val mercadoPagoClient: MercadoPagoClient,

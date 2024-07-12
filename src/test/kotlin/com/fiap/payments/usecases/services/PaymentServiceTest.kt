@@ -3,7 +3,7 @@ package com.fiap.payments.usecases.services
 import com.fiap.payments.adapter.gateway.PaymentGateway
 import com.fiap.payments.adapter.gateway.PaymentProviderGateway
 import com.fiap.payments.createPayment
-import com.fiap.payments.createPaymentHTTPRequest
+import com.fiap.payments.createPaymentEvent
 import com.fiap.payments.createPaymentRequest
 import com.fiap.payments.domain.errors.ErrorType
 import com.fiap.payments.domain.errors.PaymentsException
@@ -96,7 +96,7 @@ class PaymentServiceTest {
 
         @Test
         fun `should create payment`() {
-            val paymentHTTPRequest = createPaymentHTTPRequest()
+            val paymentHTTPRequest = createPaymentEvent()
             val payment = createPayment()
             val paymentRequest = createPaymentRequest()
 
