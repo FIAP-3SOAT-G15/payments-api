@@ -2,13 +2,13 @@ package com.fiap.payments.usecases.services
 
 import com.fiap.payments.adapter.gateway.PaymentGateway
 import com.fiap.payments.adapter.gateway.PaymentProviderGateway
+import com.fiap.payments.adapter.messaging.PaymentSender
 import com.fiap.payments.domain.entities.Payment
 import com.fiap.payments.domain.errors.ErrorType
 import com.fiap.payments.domain.errors.PaymentsException
 import com.fiap.payments.domain.valueobjects.PaymentStatus
 import com.fiap.payments.driver.messaging.event.PaymentRequestEvent
 import com.fiap.payments.usecases.ChangePaymentStatusUseCase
-import com.fiap.payments.usecases.ConfirmOrderUseCase
 import com.fiap.payments.usecases.LoadPaymentUseCase
 import com.fiap.payments.usecases.ProvidePaymentRequestUseCase
 import org.slf4j.LoggerFactory
@@ -17,7 +17,6 @@ import java.time.LocalDateTime
 class PaymentService(
     private val paymentGateway: PaymentGateway,
     private val paymentProvider: PaymentProviderGateway,
-    private val confirmOrderUseCase: ConfirmOrderUseCase,
 ) : LoadPaymentUseCase,
     ProvidePaymentRequestUseCase,
     ChangePaymentStatusUseCase
@@ -62,15 +61,16 @@ class PaymentService(
 
     override fun confirmPayment(paymentId: String): Payment {
         val confirmedPayment = changePaymentStatus(paymentId = paymentId, newStatus = PaymentStatus.CONFIRMED)
-        confirmOrderUseCase.confirmOrder(confirmedPayment.orderNumber)
-        return confirmedPayment
+        return paymentGateway.publishPayment(confirmedPayment)
     }
 
     override fun failPayment(paymentId: String): Payment =
         changePaymentStatus(paymentId = paymentId, newStatus = PaymentStatus.FAILED)
+            .let(paymentGateway::publishPayment)
 
     override fun expirePayment(paymentId: String): Payment =
         changePaymentStatus(paymentId = paymentId, newStatus = PaymentStatus.EXPIRED)
+            .let(paymentGateway::publishPayment)
 
     private fun changePaymentStatus(paymentId: String, newStatus: PaymentStatus): Payment =
         getByPaymentId(paymentId)

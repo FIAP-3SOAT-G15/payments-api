@@ -8,7 +8,6 @@ import com.fiap.payments.createPaymentRequest
 import com.fiap.payments.domain.errors.ErrorType
 import com.fiap.payments.domain.errors.PaymentsException
 import com.fiap.payments.domain.valueobjects.PaymentStatus
-import com.fiap.payments.usecases.ConfirmOrderUseCase
 import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
@@ -25,15 +24,13 @@ import java.time.LocalDateTime
 import java.util.*
 
 class PaymentServiceTest {
-    private val paymentRepository = mockk<PaymentGateway>()
+    private val paymentGateway = mockk<PaymentGateway>()
     private val paymentProvider = mockk<PaymentProviderGateway>()
-    private val confirmOrderUseCase = mockk<ConfirmOrderUseCase>()
 
     private val paymentService =
         PaymentService(
-            paymentRepository,
+            paymentGateway,
             paymentProvider,
-            confirmOrderUseCase
         )
 
     @AfterEach
@@ -46,7 +43,7 @@ class PaymentServiceTest {
         @Test
         fun `should return existent payment`() {
             val payment = createPayment()
-            every { paymentRepository.findByPaymentId(payment.id) } returns payment
+            every { paymentGateway.findByPaymentId(payment.id) } returns payment
             val result = paymentService.getByPaymentId(payment.id)
             assertThat(result).isEqualTo(payment)
         }
@@ -55,7 +52,7 @@ class PaymentServiceTest {
         fun `should throw an exception when payment is not found`() {
             val paymentId = "5019af79-11c8-4100-9d3c-e98563b1c52c"
 
-            every { paymentRepository.findByPaymentId(paymentId) } returns null
+            every { paymentGateway.findByPaymentId(paymentId) } returns null
 
             assertThatThrownBy { paymentService.getByPaymentId(paymentId) }
                 .isInstanceOf(PaymentsException::class.java)
@@ -70,12 +67,12 @@ class PaymentServiceTest {
             val paymentId = UUID.randomUUID().toString()
             val payment = createPayment(id = paymentId)
             
-            every { paymentRepository.findByPaymentId(paymentId) } returns payment
+            every { paymentGateway.findByPaymentId(paymentId) } returns payment
             
             val result = paymentService.findByPaymentId(paymentId)
             
             assertThat(result).isEqualTo(payment)
-            verify(exactly = 1) { paymentRepository.findByPaymentId(paymentId) }
+            verify(exactly = 1) { paymentGateway.findByPaymentId(paymentId) }
         }
     }
 
@@ -85,12 +82,12 @@ class PaymentServiceTest {
         fun `should find all payments`() {
             val payments = listOf(createPayment())
             
-            every { paymentRepository.findAll() } returns payments
+            every { paymentGateway.findAll() } returns payments
             
             val result = paymentService.findAll()
             
             assertThat(result).containsExactlyElementsOf(payments)
-            verify(exactly = 1) { paymentRepository.findAll() }
+            verify(exactly = 1) { paymentGateway.findAll() }
         }
     }
 
@@ -103,13 +100,15 @@ class PaymentServiceTest {
             val payment = createPayment()
             val paymentRequest = createPaymentRequest()
 
-            every { paymentRepository.upsert(any()) } returns payment
+            every { paymentGateway.upsert(any()) } returns payment
             every { paymentProvider.createExternalOrder(payment.id, paymentHTTPRequest) } returns paymentRequest
+            every { paymentGateway.publishPayment(payment) } returns payment
+
 
             val result = paymentService.providePaymentRequest(paymentHTTPRequest)
 
             assertThat(result).isEqualTo(payment)
-            verify(exactly = 2) { paymentRepository.upsert(any()) }
+            verify(exactly = 2) { paymentGateway.upsert(any()) }
         }
     }
     
@@ -124,14 +123,14 @@ class PaymentServiceTest {
                 statusChangedAt = LocalDateTime.now()
             )
             
-            every { paymentRepository.findByPaymentId(paymentId) } returns pendingPayment
-            every { paymentRepository.upsert(any()) } returns changedPayment
-            justRun { confirmOrderUseCase.confirmOrder(pendingPayment.orderNumber) }
+            every { paymentGateway.findByPaymentId(paymentId) } returns pendingPayment
+            every { paymentGateway.upsert(any()) } returns changedPayment
+            every { paymentGateway.publishPayment(changedPayment) } returns changedPayment
             
             val result = paymentService.confirmPayment(paymentId)
             
             assertThat(result).isEqualTo(changedPayment)
-            verify(exactly = 1) { confirmOrderUseCase.confirmOrder(pendingPayment.orderNumber) }
+            verify(exactly = 1) { paymentGateway.publishPayment(changedPayment) }
         }
 
         @ParameterizedTest
@@ -140,7 +139,7 @@ class PaymentServiceTest {
             val paymentId = UUID.randomUUID().toString()
             val payment = createPayment(status = paymentStatus)
 
-            every { paymentRepository.findByPaymentId(paymentId) } returns payment
+            every { paymentGateway.findByPaymentId(paymentId) } returns payment
 
             assertThatThrownBy { paymentService.confirmPayment(paymentId) }
                 .isInstanceOf(PaymentsException::class.java)
@@ -159,8 +158,9 @@ class PaymentServiceTest {
                 statusChangedAt = LocalDateTime.now()
             )
 
-            every { paymentRepository.findByPaymentId(paymentId) } returns pendingPayment
-            every { paymentRepository.upsert(any()) } returns changedPayment
+            every { paymentGateway.findByPaymentId(paymentId) } returns pendingPayment
+            every { paymentGateway.upsert(any()) } returns changedPayment
+            every { paymentGateway.publishPayment(changedPayment) } returns changedPayment
 
             val result = paymentService.failPayment(paymentId)
 
@@ -173,7 +173,7 @@ class PaymentServiceTest {
             val paymentId = UUID.randomUUID().toString()
             val payment = createPayment(status = paymentStatus)
 
-            every { paymentRepository.findByPaymentId(paymentId) } returns payment
+            every { paymentGateway.findByPaymentId(paymentId) } returns payment
 
             assertThatThrownBy { paymentService.failPayment(paymentId) }
                 .isInstanceOf(PaymentsException::class.java)
@@ -192,8 +192,9 @@ class PaymentServiceTest {
                 statusChangedAt = LocalDateTime.now()
             )
 
-            every { paymentRepository.findByPaymentId(paymentId) } returns pendingPayment
-            every { paymentRepository.upsert(any()) } returns changedPayment
+            every { paymentGateway.findByPaymentId(paymentId) } returns pendingPayment
+            every { paymentGateway.upsert(any()) } returns changedPayment
+            every { paymentGateway.publishPayment(changedPayment) } returns changedPayment
 
             val result = paymentService.expirePayment(paymentId)
 
@@ -206,7 +207,7 @@ class PaymentServiceTest {
             val paymentId = UUID.randomUUID().toString()
             val payment = createPayment(status = paymentStatus)
 
-            every { paymentRepository.findByPaymentId(paymentId) } returns payment
+            every { paymentGateway.findByPaymentId(paymentId) } returns payment
 
             assertThatThrownBy { paymentService.expirePayment(paymentId) }
                 .isInstanceOf(PaymentsException::class.java)

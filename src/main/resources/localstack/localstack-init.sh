@@ -50,3 +50,12 @@ aws sns subscribe \
 echo "Topic payment-response_queue subscribe"
 
 echo "Configuration completed, ready to dev!"
+
+
+
+## It is necessary to configure --attribute-name=RawMessageDelivery
+## for the message to be received in the correct format
+##
+## aws sns set-subscription-attributes --endpoint-url=http://localhost:4566 --subscription-arn=<<SUBSCRIPTION-ARN>> --attribute-name=RawMessageDelivery --attribute-value=true
+##
+##
