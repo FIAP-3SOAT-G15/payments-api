@@ -1,6 +1,7 @@
 package com.fiap.payments.adapter.gateway.impl
 
 import com.fiap.payments.adapter.gateway.PaymentGateway
+import com.fiap.payments.adapter.messaging.PaymentSender
 import com.fiap.payments.domain.entities.Payment
 import com.fiap.payments.driver.database.persistence.mapper.PaymentMapper
 import com.fiap.payments.driver.database.persistence.repository.PaymentDynamoRepository
@@ -8,6 +9,7 @@ import org.mapstruct.factory.Mappers
 
 class PaymentGatewayImpl(
     private val paymentRepository: PaymentDynamoRepository,
+    private val paymentSender: PaymentSender
 ) : PaymentGateway {
     private val mapper = Mappers.getMapper(PaymentMapper::class.java)
 
@@ -35,6 +37,11 @@ class PaymentGatewayImpl(
                 statusChangedAt = payment.statusChangedAt,
             )
         return persist(paymentUpdated)
+    }
+
+    override fun publishPayment(payment: Payment): Payment {
+        paymentSender.sendPayment(payment)
+        return payment
     }
 
     private fun persist(payment: Payment): Payment =

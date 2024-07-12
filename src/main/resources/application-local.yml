@@ -6,3 +6,24 @@ aws:
 
 payment-provider:
   mock: true
+
+spring:
+  cloud:
+    aws:
+      endpoint: http://localhost:4566
+      credentials:
+        access-key: localstack
+        secret-key: localstack
+      region:
+        static: ${AWS_REGION}
+
+sqs:
+  queues:
+    request-payment: request-payment_queue
+
+topic:
+  response-payment: arn:aws:sns:us-east-2:000000000000:payment-response_topic
+
+
+server:
+  port: 8081

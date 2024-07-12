@@ -64,17 +64,6 @@ class PaymentControllerTest {
         assertThat(result.body).isEqualTo(payment)
     }
     
-    @Test
-    fun `should create payment`() {
-        val paymentHTTPRequest = createPaymentHTTPRequest()
-        val payment = createPayment()
-        every { providePaymentRequestUseCase.providePaymentRequest(paymentHTTPRequest) } returns payment
-        
-        val result = paymentController.create(paymentHTTPRequest)
-        
-        assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
-        assertThat(result.body).isEqualTo(payment)
-    }
 
     @Test
     fun `should fail payment`() {

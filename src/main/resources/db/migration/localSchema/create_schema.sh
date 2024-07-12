@@ -4,7 +4,7 @@ set -e
 
 export AWS_ACCESS_KEY_ID=fakekey
 export AWS_SECRET_ACCESS_KEY=fakeaccesskey
-export AWS_REGION=us-east-1
+export AWS_REGION=us-east-2
 
 aws dynamodb create-table \
   --table-name payments \

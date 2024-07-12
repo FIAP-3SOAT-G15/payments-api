@@ -1,5 +1,6 @@
 package com.fiap.payments.adapter.gateway.impl
 
+import com.fiap.payments.adapter.messaging.PaymentSender
 import com.fiap.payments.createPayment
 import com.fiap.payments.createPaymentDocument
 import com.fiap.payments.domain.valueobjects.PaymentStatus
@@ -18,10 +19,12 @@ import java.util.*
 
 class PaymentGatewayImplTest {
     private val paymentRepository = mockk<PaymentDynamoRepository>()
+    private val paymentSender =  mockk<PaymentSender>()
+
 
     private val paymentGatewayImpl =
         PaymentGatewayImpl(
-            paymentRepository
+            paymentRepository, paymentSender
         )
 
     @AfterEach

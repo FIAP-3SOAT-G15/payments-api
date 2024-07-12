@@ -67,13 +67,6 @@ interface PaymentAPI {
         @RequestParam topic: String,
     ): ResponseEntity<Any>
 
-    @ApiResponses(
-        value = [
-            ApiResponse(responseCode = "200", description = "Operação bem-sucedida"),
-        ],
-    )
-    @PostMapping
-    fun create(@RequestBody paymentHTTPRequest: PaymentHTTPRequest): ResponseEntity<Payment>
 
     @ApiResponses(
         value = [

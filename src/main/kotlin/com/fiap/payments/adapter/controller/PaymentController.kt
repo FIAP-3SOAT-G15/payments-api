@@ -28,9 +28,6 @@ class PaymentController(
         return ResponseEntity.ok(loadPaymentUseCase.getByPaymentId(paymentId))
     }
 
-    override fun create(paymentHTTPRequest: PaymentHTTPRequest): ResponseEntity<Payment> {
-        return ResponseEntity.ok(providePaymentRequestUseCase.providePaymentRequest(paymentHTTPRequest))
-    }
 
     override fun fail(paymentId: String): ResponseEntity<Payment> {
         return ResponseEntity.ok(changePaymentStatusUseCase.failPayment(paymentId))

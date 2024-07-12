@@ -14,6 +14,7 @@
     <name>payments</name>
     <description>Payments API</description>
     <properties>
+        <awsspring.version>3.0.4</awsspring.version>
         <java.version>17</java.version>
         <kotlin.version>1.8.22</kotlin.version>
         <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
@@ -111,6 +112,14 @@
             <artifactId>aws-java-sdk-sts</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.awspring.cloud</groupId>
+            <artifactId>spring-cloud-aws-starter-sns</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.awspring.cloud</groupId>
+            <artifactId>spring-cloud-aws-starter-sqs</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.github.boostchicken</groupId>
             <artifactId>spring-data-dynamodb</artifactId>
             <version>5.2.5</version>
@@ -146,6 +155,13 @@
                 <groupId>com.amazonaws</groupId>
                 <artifactId>aws-java-sdk-bom</artifactId>
                 <version>${aws.java.sdk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.awspring.cloud</groupId>
+                <artifactId>spring-cloud-aws-dependencies</artifactId>
+                <version>${awsspring.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

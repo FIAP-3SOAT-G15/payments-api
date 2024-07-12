@@ -6,7 +6,7 @@ import com.fiap.payments.domain.entities.Payment
 import com.fiap.payments.domain.errors.ErrorType
 import com.fiap.payments.domain.errors.PaymentsException
 import com.fiap.payments.domain.valueobjects.PaymentStatus
-import com.fiap.payments.driver.web.request.PaymentHTTPRequest
+import com.fiap.payments.driver.messaging.event.PaymentRequestEvent
 import com.fiap.payments.usecases.ChangePaymentStatusUseCase
 import com.fiap.payments.usecases.ConfirmOrderUseCase
 import com.fiap.payments.usecases.LoadPaymentUseCase
@@ -37,9 +37,9 @@ class PaymentService(
     override fun findAll(): List<Payment> =
         paymentGateway.findAll()
 
-    override fun providePaymentRequest(paymentHTTPRequest: PaymentHTTPRequest): Payment {
+    override fun providePaymentRequest(paymentRequestEvent: PaymentRequestEvent): Payment {
         var payment = Payment(
-            orderNumber = paymentHTTPRequest.orderInfo.number,
+            orderNumber = paymentRequestEvent.orderInfo.number,
             createdAt = LocalDateTime.now(),
             status = PaymentStatus.PENDING,
             statusChangedAt = LocalDateTime.now(),
@@ -47,8 +47,8 @@ class PaymentService(
         payment = paymentGateway.upsert(payment)
         log.info("Payment $payment stored for order [${payment.orderNumber}]")
 
-        log.info("Requesting payment request for order [${paymentHTTPRequest.orderInfo.number}]")
-        val paymentRequest = paymentProvider.createExternalOrder(payment.id, paymentHTTPRequest)
+        log.info("Requesting payment request for order [${paymentRequestEvent.orderInfo.number}]")
+        val paymentRequest = paymentProvider.createExternalOrder(payment.id, paymentRequestEvent)
 
         payment = payment.copy(
             externalOrderId = paymentRequest.externalOrderId,
@@ -57,7 +57,7 @@ class PaymentService(
         )
         paymentGateway.upsert(payment)
 
-        return payment
+        return paymentGateway.publishPayment(payment)
     }
 
     override fun confirmPayment(paymentId: String): Payment {
