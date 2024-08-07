@@ -1,6 +1,7 @@
 name: Provision
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -13,7 +14,6 @@ on:
     paths:
       - .github/workflows/provision.yml
       - 'terraform/**'
-  workflow_dispatch:
 
 jobs:
   provision:
@@ -63,5 +63,5 @@ jobs:
         run: exit 1
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: (github.ref == 'refs/heads/main' && github.event_name == 'push') || github.event_name == 'workflow_dispatch'
         run: terraform apply -auto-approve -input=false
