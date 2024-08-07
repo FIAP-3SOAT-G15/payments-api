@@ -1,6 +1,6 @@
 package com.fiap.payments.driver.database.provider
 
-import com.fiap.payments.createPaymentHTTPRequest
+import com.fiap.payments.createPaymentEvent
 import com.fiap.payments.domain.valueobjects.PaymentStatus
 import io.mockk.unmockkAll
 import org.assertj.core.api.Assertions.assertThat
@@ -19,7 +19,7 @@ class PaymentProviderGatewayMockTest {
     @Test
     fun `should create external order`() {
         val paymentId = UUID.randomUUID().toString()
-        val paymentHTTPRequest = createPaymentHTTPRequest()
+        val paymentHTTPRequest = createPaymentEvent()
         
         val result = paymentProviderGatewayMock.createExternalOrder(paymentId, paymentHTTPRequest)
  

@@ -1,13 +1,10 @@
 package com.fiap.payments.adapter.controller.config
 
 import com.fiap.payments.PaymentsApiApp
-import com.fiap.payments.adapter.gateway.OrderGateway
 import com.fiap.payments.adapter.gateway.PaymentGateway
 import com.fiap.payments.adapter.gateway.PaymentProviderGateway
 import com.fiap.payments.usecases.ChangePaymentStatusUseCase
-import com.fiap.payments.usecases.ConfirmOrderUseCase
 import com.fiap.payments.usecases.LoadPaymentUseCase
-import com.fiap.payments.usecases.services.OrderService
 import com.fiap.payments.usecases.services.PaymentService
 import com.fiap.payments.usecases.services.PaymentSyncService
 import org.springframework.context.annotation.Bean
@@ -21,13 +18,11 @@ class ServiceConfig {
     @Bean
     fun createPaymentService(
         paymentRepository: PaymentGateway,
-        paymentProvider: PaymentProviderGateway,
-        confirmOrderUseCase: ConfirmOrderUseCase
+        paymentProvider: PaymentProviderGateway
     ): PaymentService {
         return PaymentService(
             paymentRepository,
             paymentProvider,
-            confirmOrderUseCase
         )
     }
 
@@ -46,10 +41,4 @@ class ServiceConfig {
         )
     }
 
-    @Bean
-    fun paymentOrderService(orderGateway: OrderGateway): OrderService {
-        return OrderService(
-            orderGateway
-        )
-    }
 }

@@ -9,15 +9,14 @@ import com.fiap.payments.domain.entities.PaymentRequest
 import com.fiap.payments.domain.valueobjects.PaymentStatus
 import com.fiap.payments.driver.database.persistence.entities.PaymentDocument
 import com.fiap.payments.driver.database.provider.MercadoPagoPaymentProvider
-import com.fiap.payments.driver.web.request.OrderInfo
-import com.fiap.payments.driver.web.request.OrderLine
-import com.fiap.payments.driver.web.request.PaymentHTTPRequest
+import com.fiap.payments.driver.messaging.event.PaymentRequestEvent
+
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-fun createPaymentHTTPRequest(
-    orderInfo: OrderInfo = createOrderInfo()
-) = PaymentHTTPRequest(
+fun createPaymentEvent(
+    orderInfo: com.fiap.payments.driver.messaging.event.OrderInfo = createOrderInfo()
+) = PaymentRequestEvent(
     orderInfo = orderInfo
 )
 
@@ -26,13 +25,13 @@ fun createOrderInfo(
     orderedAt: LocalDateTime = LocalDateTime.parse("2023-10-01T18:00:00"),
     orderedBy: String = "John Doe",
     totalAmount: BigDecimal = BigDecimal.valueOf(10)
-) = OrderInfo(
+) = com.fiap.payments.driver.messaging.event.OrderInfo(
     number = number,
     orderedAt = orderedAt,
     orderedBy = orderedBy,
     total = totalAmount,
     lines = listOf(
-        OrderLine(
+        com.fiap.payments.driver.messaging.event.OrderLine(
             name = "Item 1",
             quantity = 1,
             total = BigDecimal.valueOf(10),

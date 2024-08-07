@@ -8,4 +8,6 @@ interface PaymentGateway {
     fun findAll(): List<Payment>
 
     fun upsert(payment: Payment): Payment
+
+    fun publishPayment(payment: Payment): Payment
 }

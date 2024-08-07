@@ -6,14 +6,14 @@ import com.fiap.payments.client.MercadoPagoQRCodeOrderRequest
 import com.fiap.payments.client.MercadoPagoQRCodeOrderRequestItem
 import com.fiap.payments.domain.entities.PaymentRequest
 import com.fiap.payments.domain.valueobjects.PaymentStatus
-import com.fiap.payments.driver.web.request.PaymentHTTPRequest
+import com.fiap.payments.driver.messaging.event.PaymentRequestEvent
 
 class MercadoPagoPaymentProvider(
     private val mercadoPagoClient: MercadoPagoClient,
     private val webhookBaseUrl: String,
 ) : PaymentProviderGateway {
 
-    override fun createExternalOrder(paymentId: String, paymentHTTPRequest: PaymentHTTPRequest): PaymentRequest {
+    override fun createExternalOrder(paymentId: String, paymentHTTPRequest: PaymentRequestEvent): PaymentRequest {
         // source_news=ipn indicates application will receive only Instant Payment Notifications (IPNs), not webhooks
         val notificationUrl = "${webhookBaseUrl}/payments/notifications/${paymentId}?source_news=ipn"
 

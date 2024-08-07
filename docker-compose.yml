@@ -15,7 +15,7 @@ services:
       AWS_ACCESS_KEY_ID: "fakekey"
       AWS_SECRET_ACCESS_KEY: "fakeaccesskey"
       AWS_DYNAMODB_ENDPOINT: http://paymentsdb:54000
-      AWS_REGION: us-east-1
+      AWS_REGION: us-east-2
       ADMIN_ACCESS_TOKEN: token
       MOCK_PAYMENT_PROVIDER: true
       MP_TOKEN: token
@@ -41,13 +41,25 @@ services:
     environment:
       AWS_ACCESS_KEY_ID: "fakekey"
       AWS_SECRET_ACCESS_KEY: "fakeaccesskey"
-      AWS_REGION: us-east-1
+      AWS_REGION: us-east-2
     command: ["-D\"java.library.path\"=./DynamoDBLocal_lib", "-jar", "DynamoDBLocal.jar", "-inMemory", "-sharedDb"]
     healthcheck:
       test: ["CMD-SHELL", "curl localhost:8000"]
       interval: 10s
       timeout: 5s
       retries: 5
+
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack-sqs-sns
+    ports:
+      - "4566:4566"
+      - "4510-4559:4510-4559"
+    environment:
+      - SERVICES=sqs,sns
+      - AWS_DEFAULT_REGION=us-east-2
+    volumes:
+      - ./src/main/resources/localstack/localstack-init.sh:/etc/localstack/init/ready.d/init-aws.sh
 
 volumes:
   payments_db:
