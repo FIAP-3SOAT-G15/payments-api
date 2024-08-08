@@ -1,9 +1,7 @@
+# REQUEST QUEUE
+
 resource "aws_sqs_queue" "request_payment_dlq" {
   name = "request-payment_queue_dlq"
-}
-
-resource "aws_sqs_queue" "payment_response_dlq" {
-  name = "payment-response_queue_dlq"
 }
 
 resource "aws_sqs_queue" "request_payment_queue" {
@@ -15,6 +13,12 @@ resource "aws_sqs_queue" "request_payment_queue" {
   })
 
   delay_seconds = 5
+}
+
+# RESPONSE QUEUE
+
+resource "aws_sqs_queue" "payment_response_dlq" {
+  name = "payment-response_queue_dlq"
 }
 
 resource "aws_sqs_queue" "payment_response_queue" {

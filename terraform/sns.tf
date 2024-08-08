@@ -1,7 +1,3 @@
-resource "aws_sns_topic" "request_payment_topic" {
-  name = "request-payment_topic"
-}
-
 resource "aws_sns_topic" "payment_response_topic" {
   name = "payment-response_topic"
 }
@@ -12,6 +8,10 @@ resource "aws_sns_topic_subscription" "request_payment_subscription" {
   endpoint  = aws_sqs_queue.request_payment_queue.arn
 
   raw_message_delivery = true
+}
+
+resource "aws_sns_topic" "request_payment_topic" {
+  name = "request-payment_topic"
 }
 
 resource "aws_sns_topic_subscription" "payment_response_subscription" {

@@ -70,7 +70,6 @@ class LocalStackContainerInitializer :
             "spring.cloud.aws.credentials.access-key=${instance.accessKey}",
             "spring.cloud.aws.credentials.secret-key=${instance.secretKey}",
             "spring.cloud.aws.region.static=${instance.region}",
-            "sns.topics.response-payment=${getTopicArn(snsClient, "payment-response_topic")}",
         ).applyTo(configurableApplicationContext)
     }
 

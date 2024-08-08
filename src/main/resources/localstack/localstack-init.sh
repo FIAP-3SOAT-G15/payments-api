@@ -35,17 +35,17 @@ done
 
 aws sns subscribe \
       --endpoint-url=http://localhost:4566 \
-      --topic-arn=arn:aws:sqs:us-east-2:000000000000:request-payment_topic  \
+      --topic-arn=arn:aws:sqs:us-east-1:000000000000:request-payment_topic  \
       --protocol=sqs \
-      --notification-endpoint=arn:aws:sns:us-east-2:000000000000:request-payment_queue
+      --notification-endpoint=arn:aws:sns:us-east-1:000000000000:request-payment_queue
 
 echo "Topic request-payment_queue subscribe"
 
 aws sns subscribe \
       --endpoint-url=http://localhost:4566 \
-      --topic-arn=arn:aws:sqs:us-east-2:000000000000:payment-response_topic \
+      --topic-arn=arn:aws:sqs:us-east-1:000000000000:payment-response_topic \
       --protocol=sqs \
-      --notification-endpoint=arn:aws:sns:us-east-2:000000000000:payment-response_queue
+      --notification-endpoint=arn:aws:sns:us-east-1:000000000000:payment-response_queue
 
 echo "Topic payment-response_queue subscribe"
 
