@@ -20,11 +20,7 @@ import org.springframework.security.web.SecurityFilterChain
     bearerFormat = "JWT",
     scheme = "bearer"
 )
-@ConditionalOnProperty(
-    value = ["security.enable"],
-    havingValue = "true",
-    matchIfMissing = true
-)
+@ConditionalOnProperty(value = ["security.enable"], havingValue = "true", matchIfMissing = true)
 class JWTSecurityConfig {
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
