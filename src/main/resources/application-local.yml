@@ -1,8 +1,4 @@
-aws:
-  dynamodb:
-    local: true
-    endpoint: ${AWS_DYNAMODB_ENDPOINT}
-    region: ${AWS_REGION}
+local: true
 
 payment-provider:
   mock: true
@@ -21,9 +17,9 @@ sqs:
   queues:
     request-payment: request-payment_queue
 
-topic:
-  response-payment: arn:aws:sns:us-east-2:000000000000:payment-response_topic
-
+sns:
+  topics:
+    response-payment: arn:aws:sns:us-east-2:000000000000:payment-response_topic
 
 server:
   port: 8081

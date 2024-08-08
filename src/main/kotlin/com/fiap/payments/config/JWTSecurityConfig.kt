@@ -2,6 +2,7 @@ package com.fiap.payments.config
 
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType
 import io.swagger.v3.oas.annotations.security.SecurityScheme
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -18,6 +19,11 @@ import org.springframework.security.web.SecurityFilterChain
     type = SecuritySchemeType.HTTP,
     bearerFormat = "JWT",
     scheme = "bearer"
+)
+@ConditionalOnProperty(
+    value = ["security.enable"],
+    havingValue = "true",
+    matchIfMissing = true
 )
 class JWTSecurityConfig {
     @Bean

@@ -13,7 +13,7 @@ class MessagingConfig {
 
     @Bean
     fun createPaymentSender(snsTemplate: SnsTemplate,
-                            @Value("\${topic.response-payment}") topicName: String,
+                            @Value("\${sns.topics.response-payment}") topicName: String,
                             objectMapper: ObjectMapper): PaymentSender {
         return PaymentSenderImpl(snsTemplate, topicName, objectMapper)
     }

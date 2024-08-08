@@ -16,7 +16,6 @@ services:
       AWS_SECRET_ACCESS_KEY: "fakeaccesskey"
       AWS_DYNAMODB_ENDPOINT: http://paymentsdb:54000
       AWS_REGION: us-east-2
-      ADMIN_ACCESS_TOKEN: token
       MOCK_PAYMENT_PROVIDER: true
       MP_TOKEN: token
       MP_USER_ID: userId

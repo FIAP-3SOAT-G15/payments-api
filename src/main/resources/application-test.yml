@@ -1,5 +1,4 @@
-admin:
-  access-token: token
+local: true
 
 payment-provider:
   mock: true
