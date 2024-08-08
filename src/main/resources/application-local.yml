@@ -13,13 +13,5 @@ spring:
       region:
         static: ${AWS_REGION}
 
-sqs:
-  queues:
-    request-payment: request-payment_queue
-
-sns:
-  topics:
-    response-payment: arn:aws:sns:us-east-2:000000000000:payment-response_topic
-
 server:
   port: 8081

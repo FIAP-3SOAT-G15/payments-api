@@ -22,11 +22,7 @@ sqs:
 
 sns:
   topics:
-    response-payment: ${SNS_TOPIC_RESPONSE_PAYMENT_ARN}
-
-clients:
-  orders-api:
-    url: ${ORDERS_SERVICE_URL}
+    response-payment: payment-response_topic
 
 server:
   port: 8082

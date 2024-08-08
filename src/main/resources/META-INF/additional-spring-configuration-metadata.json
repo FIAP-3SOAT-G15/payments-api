@@ -29,6 +29,21 @@
       "name": "mercadopago.integration.webhookBaseUrl",
       "type": "java.lang.String",
       "description": "Description for mercadopago.integration.webhookBaseUrl."
+    },
+    {
+      "name": "sqs.queues.request-payment",
+      "type": "java.lang.String",
+      "description": "Description for sqs.queues.request-payment."
+    },
+    {
+      "name": "sns.topics.response-payment",
+      "type": "java.lang.String",
+      "description": "Description for sns.topics.response-payment."
+    },
+    {
+      "name": "security.enable",
+      "type": "java.lang.String",
+      "description": "Description for security.enable."
     }
   ]
 }
