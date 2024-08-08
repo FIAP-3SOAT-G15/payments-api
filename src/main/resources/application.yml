@@ -1,15 +1,6 @@
 spring:
   application:
     name: payments
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_ygM5FRn7D
-          jwk-set-uri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_ygM5FRn7D/.well-known/jwks.json
-
-admin:
-  access-token: ${ADMIN_ACCESS_TOKEN}
 
 payment-provider:
   mock: ${MOCK_PAYMENT_PROVIDER}
@@ -23,9 +14,15 @@ mercadopago:
     posId: ${MP_POS_ID}
     webhookBaseUrl: ${MP_WEBHOOK_BASE_URL}
 
-aws:
-  dynamodb:
-    local: false
+local: false
+
+sqs:
+  queues:
+    request-payment: request-payment_queue
+
+sns:
+  topics:
+    response-payment: ${SNS_TOPIC_RESPONSE_PAYMENT_ARN}
 
 clients:
   orders-api:
@@ -33,3 +30,6 @@ clients:
 
 server:
   port: 8082
+
+security:
+  enable: false

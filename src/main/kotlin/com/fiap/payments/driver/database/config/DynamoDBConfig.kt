@@ -31,10 +31,10 @@ class DynamoDBConfig {
      * For local run.
      */
     @Bean("amazonDynamoDB")
-    @ConditionalOnProperty("aws.dynamodb.local", havingValue = "true")
+    @ConditionalOnProperty("local", havingValue = "true")
     fun amazonDynamoDB(
-        @Value("\${aws.dynamodb.endpoint}") endpoint: String,
-        @Value("\${aws.dynamodb.region}") region: String,
+        @Value("\${spring.cloud.aws.endpoint}") endpoint: String,
+        @Value("\${spring.cloud.aws.region.static}") region: String,
     ): AmazonDynamoDB {
         return AmazonDynamoDBClientBuilder.standard()
             // using default credentials provider chain, which searches for environment variables
@@ -53,7 +53,7 @@ class DynamoDBConfig {
      * we need to keep as v1 and include token provider to the chain.
      */
     @Bean("amazonDynamoDB")
-    @ConditionalOnProperty("aws.dynamodb.local", havingValue = "false")
+    @ConditionalOnProperty("local", havingValue = "false")
     fun awsCredentialsProvider(): AmazonDynamoDB {
         return AmazonDynamoDBClientBuilder.standard()
             // AWS_WEB_IDENTITY_TOKEN_FILE is present.
